@@ -4,9 +4,11 @@ import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
+const BASE_URL = process.env.REACT_APP_DEV_API_URL;
+
 function App() {
 
-  const url = `${process.env.REACT_APP_DEV_API_URL}/internalapi`;
+  const url = `${BASE_URL}/internalapi`;
   const [data, setData] = useState({'_source': 2});
 
   useEffect(() => {
