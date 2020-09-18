@@ -6,13 +6,14 @@ import './App.css';
 
 function App() {
 
-  const url = '/internalapi'
-  const [data, setData] = useState(0);
+  const url = 'http://192.168.0.202:5000/internalapi';
+  const [data, setData] = useState({'_source': 2});
 
   useEffect(() => {
     axios.get(url)
       .then(resp => {
         setData(resp.data);
+        console.log(resp.data);
       }, error => {
         console.log(error);
       });
@@ -26,7 +27,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <p>
-          {data}
+          {data['_source']['content']}
         </p>
         <a
           className="App-link"
