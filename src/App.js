@@ -6,7 +6,7 @@ import './App.css';
 
 function App() {
 
-  const url = 'http://localhost:5000'
+  const url = '/internalapi'
   const [data, setData] = useState(0);
 
   useEffect(() => {
