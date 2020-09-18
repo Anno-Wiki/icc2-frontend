@@ -6,7 +6,7 @@ import './App.css';
 
 function App() {
 
-  const url = 'http://192.168.0.202:5000/internalapi';
+  const url = `${process.env.REACT_APP_DEV_API_URL}/internalapi`;
   const [data, setData] = useState({'_source': 2});
 
   useEffect(() => {
