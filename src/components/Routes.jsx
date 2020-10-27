@@ -1,36 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {Route, Switch} from 'react-router-dom'
 import routes from '../constants/routes'
-import {useAppState} from "../providers/AppStateProvider";
-import axios from 'axios';
-
-const url = 'http://192.168.0.202:5000/_api';
-
-const TextsComponent = () => {
-    const [texts, setTexts] = useState([]);
-
-    useEffect(() => {
-        axios.get(url + '/text/all')
-            .then(resp => {
-                setTexts(resp.data.results);
-            }, error => {
-                console.log(error);
-            });
-    }, [url]);
-
-    return (
-        <div>
-            <ul>
-                {texts.map((text, index) => (
-                    <li key={text.slug}>
-                        <h1>{text.name}</h1>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
-
-}
+import {TextsComponent} from "./TextsComponent";
 
 const Routes = () => {
   return (
