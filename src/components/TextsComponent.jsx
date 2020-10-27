@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "../utilities/axiosInstance";
+import {NavLink} from "react-router-dom";
 
 export const TextsComponent = () => {
   const [texts, setTexts] = useState([]);
@@ -16,12 +17,14 @@ export const TextsComponent = () => {
   return (
     <div>
       <ul>
-        {texts.map((text, index) => (
+        {texts.map((text) => {
+          return (
           <li key={text.slug}>
-            <h1>{text.name}</h1>
+            <NavLink to={{pathname: `/text/${text.slug}`, state: {text.bookid, bookTitle: text.slug}}}>{text.name}</NavLink>
           </li>
-        ))}
+        )})}
       </ul>
+
     </div>
   )
 
