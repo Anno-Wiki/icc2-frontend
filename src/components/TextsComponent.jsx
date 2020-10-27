@@ -20,7 +20,7 @@ export const TextsComponent = () => {
         {texts.map((text) => {
           return (
           <li key={text.slug}>
-            <NavLink to={{pathname: `/text/${text.slug}`, state: {text.bookid, bookTitle: text.slug}}}>{text.name}</NavLink>
+            <NavLink to={{pathname: `/text/${text.slug}`, state: {bookid:text.bookid, bookTitle: text.slug}}}>{text.name}</NavLink>
           </li>
         )})}
       </ul>
