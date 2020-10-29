@@ -9,10 +9,14 @@ export const TocComponent = () => {
   useEffect(() => {
     axios.get(`/toc/${textTitle}/all`).then(res => setTocs(res.data.results)).catch(err => console.log(err))
   }, [textTitle])
-  const Toc = ({content, tocID}) => {
+  const Toc = ({toc}) => {
     return(
       <div>
-        <NavLink to={{pathname: `/text/${textTitle}/${tocID}`}}>{content}</NavLink>
+        {
+          toc.linkable ?
+            <NavLink to={{pathname: `/text/${textTitle}/${toc.id}`}}>{toc.content}</NavLink> :
+            <h2>{toc.content}</h2>
+        }
       </div>
     )
   }
@@ -20,7 +24,7 @@ export const TocComponent = () => {
     <>
       <h1>Table of Contents</h1>
       {tocs.map(toc =>
-      <Toc content={toc.content} tocID={toc.id}/>
+      <Toc toc={toc}/>
       )}
     </>
   )
