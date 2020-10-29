@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "../utilities/axiosInstance";
-import {NavLink, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 export const ReadComponent = () => {
   const {textTitle, tocID} = useParams();
