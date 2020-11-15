@@ -4,5 +4,25 @@
 @import url('http://fonts.cdnfonts.com/css/linux-biolinum');
 html, body {
     font-family: Linux Libertine;
-    font-size: 62.5%;
+}
+a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.2s linear;
+}
+a:hover {
+    color: grey;
+}
+h1, h2, h3 {
+    margin: 0.5rem 0;
+}
+
+h1 {
+    font-size: 2rem;
+}
+h2 {
+    font-size: 1.7rem;
+}
+h3 {
+    font-size: 1.5rem;
 }

@@ -14,7 +14,7 @@ const Link = styled(NavLink)`
 text-decoration: none;
 font-family: ${props => props.theme.font.display};
 font-weight: bold;
-font-size: 3rem;
+font-size: 2rem;
 color: ${props => props.theme.color.black};
 transition: color ${props => props.theme.transitionShort} linear;
 &:hover {
@@ -26,7 +26,7 @@ const Header = () => {
   const routesAsText = Object.entries(baseRoutes)
   return (
     <Nav>
-      {routesAsText.map(linkInfo => <Link to={linkInfo[1]}>{linkInfo[0]}</Link>)}
+      {routesAsText.map(linkInfo => <Link key={linkInfo[1]} to={linkInfo[1]}>{linkInfo[0]}</Link>)}
     </Nav>
   )
 }

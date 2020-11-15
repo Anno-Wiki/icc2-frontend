@@ -1,12 +1,20 @@
 import React from 'react'
-import Header from "./Header";
+import Header from './Header';
+import styled from 'styled-components';
+
+const Body = styled.div`
+width: 50%;
+margin: 5rem auto;
+`
 
 const Layout = ({children}) => {
   return (
-    <div>
+    <>
       <Header />
-      {children}
-    </div>
+      <Body>
+        {children}
+      </Body>
+    </>
   )
 }
 

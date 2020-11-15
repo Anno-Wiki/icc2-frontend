@@ -11,21 +11,22 @@ export const TocComponent = () => {
   }, [textTitle])
   const Toc = ({toc}) => {
     return(
-      <div>
+      <li>
         {
           toc.linkable ?
             <NavLink to={{pathname: `/text/${textTitle}/${toc.id}`}}>{toc.content}</NavLink> :
             <h2>{toc.content}</h2>
         }
-      </div>
+      </li>
     )
   }
+  console.log(tocs);
   return (
     <>
       <h1>Table of Contents</h1>
-      {tocs.map(toc =>
-      <Toc toc={toc}/>
-      )}
+      <ul>
+        {tocs.map(toc => <Toc toc={toc} key={toc.id}/>)}
+      </ul>
     </>
   )
 }

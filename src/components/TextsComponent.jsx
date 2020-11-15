@@ -1,6 +1,17 @@
-import React, {useEffect, useState} from "react";
-import axios from "../utilities/axiosInstance";
-import {NavLink} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import axios from '../utilities/axiosInstance';
+import {NavLink} from 'react-router-dom';
+import styled from 'styled-components';
+
+const List = styled.ul`
+`
+
+const ListItem = styled.li`
+margin: 1rem;
+`
+const Link = styled(NavLink)`
+margin: 0.5rem;
+`
 
 export const TextsComponent = () => {
   const [texts, setTexts] = useState([]);
@@ -16,14 +27,14 @@ export const TextsComponent = () => {
 
   return (
     <div>
-      <ul>
+      <List>
         {texts.map((text) => {
           return (
-            <li key={text.slug}>
-              <NavLink to={{pathname: `/text/${text.slug}`, state: {bookid:text.bookid, bookTitle: text.slug}}}>{text.name}</NavLink>
-            </li>
+            <ListItem key={text.slug}>
+              <Link to={{pathname: `/text/${text.slug}`, state: {bookid:text.bookid, bookTitle: text.slug}}}>{text.name}</Link>
+            </ListItem>
           )})}
-      </ul>
+      </List>
 
     </div>
   )
