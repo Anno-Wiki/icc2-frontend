@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Body = styled.div`
 width: 50%;
-margin: 5rem auto;
+margin: 1rem auto;
 `
 
 const Layout = ({children}) => {
