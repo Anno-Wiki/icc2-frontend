@@ -9,6 +9,7 @@ export const TocComponent = () => {
   useEffect(() => {
     axios.get(`/toc/${textTitle}/all`).then(res => setTocs(res.data.results)).catch(err => console.log(err))
   }, [textTitle])
+
   const Toc = ({toc}) => {
     return(
       <li>
@@ -20,7 +21,7 @@ export const TocComponent = () => {
       </li>
     )
   }
-  console.log(tocs);
+
   return (
     <>
       <h1>Table of Contents</h1>

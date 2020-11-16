@@ -4,6 +4,7 @@ import {NavLink} from 'react-router-dom';
 import styled from 'styled-components';
 
 const List = styled.ul`
+list-style-type: disc;
 `
 
 const ListItem = styled.li`
@@ -27,6 +28,7 @@ export const TextsComponent = () => {
 
   return (
     <div>
+      <h1>Texts</h1>
       <List>
         {texts.map((text) => {
           return (

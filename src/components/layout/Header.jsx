@@ -8,13 +8,13 @@ display: flex;
 justify-content: space-around;
 padding: 1rem 0;
 margin: 0 auto;
-width: 65%;
+width: 50%;
 `
 const Link = styled(NavLink)`
 text-decoration: none;
 font-family: ${props => props.theme.font.display};
 font-weight: bold;
-font-size: 2rem;
+font-size: 1.5rem;
 color: ${props => props.theme.color.black};
 transition: color ${props => props.theme.transitionShort} linear;
 &:hover {
