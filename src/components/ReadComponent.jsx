@@ -1,6 +1,11 @@
-import React, {useEffect, useState} from "react";
-import axios from "../utilities/axiosInstance";
-import {useParams} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import axios from '../utilities/axiosInstance';
+import {useParams} from 'react-router-dom';
+import styled from 'styled-components';
+
+const ReadBase = styled.div`
+
+`
 
 export const ReadComponent = () => {
   const {textTitle, tocID} = useParams();
@@ -20,6 +25,6 @@ export const ReadComponent = () => {
     return {__html: text.text}
   }
   return(
-    <div dangerouslySetInnerHTML={createText()} />
+    <ReadBase dangerouslySetInnerHTML={createText()} />
   )
 }
