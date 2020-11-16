@@ -7,7 +7,10 @@ export const theme = {
     black: '#212529',
     gray: '#6c757d',
     lightGray: '#ADB5BD',
-    blue: '#268bd2',
+    blue: '#4070a0',
+  },
+  transition: {
+    short: '0.1s',
   },
   transitionShort: '0.2s',
 }

@@ -12,13 +12,13 @@ width: 50%;
 `
 const Link = styled(NavLink)`
 text-decoration: none;
-font-family: ${props => props.theme.font.display};
+font-family: ${({theme}) => theme.font.display};
 font-weight: bold;
 font-size: 1.5rem;
-color: ${props => props.theme.color.black};
-transition: color ${props => props.theme.transitionShort} linear;
+color: ${({theme}) => theme.color.black};
+transition: color ${({theme}) => theme.transition.short} linear;
 &:hover {
-  color: ${props => props.theme.color.gray};
+  color: ${({theme}) => theme.color.gray};
 }
 `
 
