@@ -32,6 +32,10 @@ const GlobalStyle = createGlobalStyle`
   h3 {
     font-size: 1.1rem;
   }
+
+  p {
+    margin: 1rem 0;
+  }
 `
 
 export default GlobalStyle
