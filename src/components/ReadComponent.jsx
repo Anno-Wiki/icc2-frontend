@@ -2,12 +2,51 @@ import React, {useEffect, useState} from 'react';
 import axios from '../utilities/axiosInstance';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen as annotate } from '@fortawesome/free-solid-svg-icons'
 
 const ReadBase = styled.div`
 line-height: 1.2rem;
 `
-const Button = styled.button`
+const AnnotateDiv = styled.div`
+width: fit-content;
+&:hover {
+  & > div {
+    transition: color ${({theme}) => theme.transition.short} linear;
+    transition: background-color ${({theme}) => theme.transition.short} linear;
+    color: ${({theme}) => theme.color.iconfgalt};
+    background-color: ${({theme}) => theme.color.iconbgalt};
+    cursor: pointer;
+  }
+}
 `
+const AnnotateIcon = styled(FontAwesomeIcon)`
+color: ${({theme}) => theme.color.iconfg};
+`
+const AnnotateButton = styled.div`
+display: inline-block;
+border-radius: 3px;
+padding: 0.5rem;
+background-color: ${({theme}) => theme.color.iconbg};
+`
+const AnnotateArrow = styled.div`
+height: 20px;
+width: 20px;
+transform: rotate(45deg) translate(-9px, -9px);
+background-color: ${({theme}) => theme.color.iconbg};
+margin: 0 auto;
+border-radius: 3px;
+`
+const AnnotateBox = () => {
+  return (
+    <AnnotateDiv>
+      <AnnotateButton>
+        <AnnotateIcon icon={annotate} />
+      </AnnotateButton>
+      <AnnotateArrow />
+    </AnnotateDiv>
+  )
+}
 
 export const ReadComponent = () => {
   const {textTitle, tocID} = useParams();
@@ -16,11 +55,11 @@ export const ReadComponent = () => {
   const [selObj, setSelObj] = useState({});
 
   useEffect(() => {
-    axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err))
+    axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
   }, [textTitle])
 
   useEffect(() => {
-    axios.get(`/toc/${toc.bookid}-${tocID}/formatted`).then(res => setText(res.data)).catch(err => console.log(err))
+    axios.get(`/toc/${toc.bookid}-${tocID}/formatted`).then(res => setText(res.data)).catch(err => console.log(err));
   }, [toc, tocID])
 
   useEffect(() => {
@@ -83,7 +122,7 @@ export const ReadComponent = () => {
 
   return(
     <div>
-      <Button onClick={process} >Process</Button>
+      <AnnotateBox onClick={process}/>
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )

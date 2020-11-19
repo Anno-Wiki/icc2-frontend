@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalStyle = createGlobalStyle`
   html, body {
     font-family: ${({theme}) => theme.font.text};
+    background-color: ${({theme}) => theme.color.white};
     font-size: 27px;
   }
 
