@@ -5,18 +5,61 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen as annotate } from '@fortawesome/free-solid-svg-icons'
 
+function getOffsetFromBase(element) {
+  // Adapted from Tim Down https://stackoverflow.com/a/4812022/9691276
+  let start = 0, end = 0;
+  let doc = element.ownerDocument || element.document;
+  let win = doc.defaultView || doc.parentWindow;
+  let sel, str, preCaretStr;
+  if (typeof win.getSelection !== "undefined") {
+    sel = win.getSelection();
+    if (sel.rangeCount > 0) {
+      let range = sel.getRangeAt(0);
+      let preCaretRange = range.cloneRange();
+
+      // create pre-caret range
+      preCaretRange.selectNodeContents(element);
+      preCaretRange.setEnd(range.startContainer, range.startOffset);
+
+      // get pre-caret range length for start point
+      sel.removeAllRanges();
+      sel.addRange(preCaretRange);
+      preCaretStr = sel.toString().replace(/\r/g, '');
+      start = preCaretStr.length;
+
+      // replace original range
+      sel.removeAllRanges();
+      sel.addRange(range);
+      str = sel.toString().replace(/\r/g, '');
+      end = start + str.length;
+    } else {
+      return {}
+    }
+  }
+  return {
+    start: start,
+    end: end,
+    length: str.length,
+    selection: str,
+    preCaret: preCaretStr
+  }
+}
+
 const ReadBase = styled.div`
 line-height: 1.2rem;
 `
 const AnnotateDiv = styled.div`
+position: absolute;
+top: 0;
+left: 0;
 width: fit-content;
+cursor: pointer;
 &:hover {
-  & > div {
+  & > div, svg {
     transition: color ${({theme}) => theme.transition.short} linear;
     transition: background-color ${({theme}) => theme.transition.short} linear;
     color: ${({theme}) => theme.color.iconfgalt};
     background-color: ${({theme}) => theme.color.iconbgalt};
-    cursor: pointer;
   }
 }
 `
@@ -38,8 +81,13 @@ margin: 0 auto;
 border-radius: 3px;
 `
 const AnnotateBox = () => {
+  const process = (e) => {
+    const base = document.getElementById('read');
+    console.log(getOffsetFromBase(base));
+    e.preventDefault();
+  }
   return (
-    <AnnotateDiv>
+    <AnnotateDiv id="annotatebox" onMouseDown={process}>
       <AnnotateButton>
         <AnnotateIcon icon={annotate} />
       </AnnotateButton>
@@ -52,7 +100,7 @@ export const ReadComponent = () => {
   const {textTitle, tocID} = useParams();
   const [toc, setToc] = useState({});
   const [text, setText] = useState({});
-  const [selObj, setSelObj] = useState({});
+  const [selStore, setSelStore] = useState("");
 
   useEffect(() => {
     axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
@@ -65,56 +113,24 @@ export const ReadComponent = () => {
   useEffect(() => {
     const getSel = setInterval(() => {
       const sel = window.getSelection();
-      if (sel.toString() !== selObj.toString()){
-        setSelObj(sel);
+      const str = sel.toString();
+      if (str !== selStore){
+        setSelStore(str);
+        const box = document.getElementById('annotatebox');
+        if (sel.toString() !== "") {
+          const r = sel.getRangeAt(0);
+          const rects = r.getClientRects()[0];
+          const transform = `translate(${Math.round(rects.x)}px, ${Math.round(rects.y)}px)`;
+          box.style.transform = transform;
+          console.log(transform);
+        } else {
+          box.style.transform = "";
+        }
       }
     }, 100)
     return () => clearInterval(getSel);
   })
 
-  function getOffsetFromBase(element) {
-    // Adapted from Tim Down https://stackoverflow.com/a/4812022/9691276
-    let start = 0, end = 0;
-    let doc = element.ownerDocument || element.document;
-    let win = doc.defaultView || doc.parentWindow;
-    let sel, str, preCaretStr;
-    if (typeof win.getSelection !== "undefined") {
-      sel = win.getSelection();
-      if (sel.rangeCount > 0) {
-        let range = sel.getRangeAt(0);
-        let preCaretRange = range.cloneRange();
-
-        // create pre-caret range
-        preCaretRange.selectNodeContents(element);
-        preCaretRange.setEnd(range.startContainer, range.startOffset);
-
-        // get pre-caret range length for start point
-        sel.removeAllRanges();
-        sel.addRange(preCaretRange);
-        preCaretStr = sel.toString().replace(/\r/g, '');
-        start = preCaretStr.length;
-
-        // replace original range
-        sel.removeAllRanges();
-        sel.addRange(range);
-        str = sel.toString().replace(/\r/g, '');
-        end = start + str.length;
-      }
-    }
-    return {
-      start: start,
-      end: end,
-      length: str.length,
-      selection: str,
-      preCaret: preCaretStr
-    }
-  }
-
-
-  const process = () => {
-    const base = document.getElementById('read');
-    console.log(getOffsetFromBase(base));
-  }
 
   const createText = () => {
     return {__html: text.text}
@@ -122,7 +138,7 @@ export const ReadComponent = () => {
 
   return(
     <div>
-      <AnnotateBox onClick={process}/>
+      <AnnotateBox />
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )
