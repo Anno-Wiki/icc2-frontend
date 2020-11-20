@@ -29,6 +29,6 @@ export const theme = {
   },
   transition: {
     short: '0.1s',
+    medium: '0.3s',
   },
-  transitionShort: '0.2s',
 }

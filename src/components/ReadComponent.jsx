@@ -50,6 +50,8 @@ line-height: 1.2rem;
 `
 const AnnotateDiv = styled.div`
 position: absolute;
+opacity: 0;
+transition: opacity ${({theme}) => theme.transition.medium} linear;
 top: 0;
 left: 0;
 width: fit-content;
@@ -120,11 +122,13 @@ export const ReadComponent = () => {
         if (sel.toString() !== "") {
           const r = sel.getRangeAt(0);
           const rects = r.getClientRects()[0];
-          const transform = `translate(${Math.round(rects.x)}px, ${Math.round(rects.y)}px)`;
+          const transform = `translate(` +
+            `${Math.round(rects.x + (rects.width / 2))}px, ` +
+            `${Math.round(rects.y + window.scrollY - box.offsetHeight + 8)}px)`;
           box.style.transform = transform;
-          console.log(transform);
+          box.style.opacity = '100%';
         } else {
-          box.style.transform = "";
+          box.style.opacity = '0';
         }
       }
     }, 100)
