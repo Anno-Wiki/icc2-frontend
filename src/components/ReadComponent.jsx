@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import axios from '../utilities/axiosInstance';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen as annotate } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen as annotate } from '@fortawesome/free-solid-svg-icons';
+import { default as AnnotationEditor } from './EditorComponent';
 
 function getOffsetFromBase(element) {
   // Adapted from Tim Down https://stackoverflow.com/a/4812022/9691276
@@ -143,6 +144,7 @@ export const ReadComponent = () => {
   return(
     <div>
       <AnnotateBox />
+      <AnnotationEditor />
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )
