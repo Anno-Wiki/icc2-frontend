@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen as annotate } from '@fortawesome/free-solid-svg-icons'
+import Editor from './Editor';
 
 function getOffsetFromBase(element) {
   // Adapted from Tim Down https://stackoverflow.com/a/4812022/9691276
@@ -143,6 +144,7 @@ export const ReadComponent = () => {
   return(
     <div>
       <AnnotateBox />
+      <Editor />
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )
