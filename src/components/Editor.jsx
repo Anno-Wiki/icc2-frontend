@@ -8,21 +8,25 @@ const Box = styled.div`
 background-color: white;
 padding: 1rem;
 `
-const StyledQuill = styled(ReactQuill)`
+const EditingArea = styled.div`
+font-family: Linux Libertine;
+em {
+  font-style: italic;
+}
 `
 const Tool = styled.button`
 `
 
 const Editor = () => {
-  const [value, setValue] = useState('');
 
   const _onSubmit = () => {
-    console.log(value);
   }
 
   return (
     <Box>
-      <StyledQuill theme="snow" value={value} onChange={setValue}/>
+      <ReactQuill theme="snow">
+        <EditingArea />
+      </ReactQuill>
       <Tool onClick={_onSubmit}>Submit</Tool>
     </Box>
   );
