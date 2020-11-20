@@ -17,7 +17,7 @@ const Editor = () => {
   const [value, setValue] = useState('');
 
   const _onSubmit = () => {
-    console.log(StyledQuil);
+    console.log(value);
   }
 
   return (
