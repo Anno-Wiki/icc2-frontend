@@ -7,9 +7,7 @@ export const theme = {
     black: '#212529',
     white: '#FFFCFF',         // Snow
     gray: '#50514F',          // Davys Grey
-    grey: '#50514F',          // Davys Grey
-    lightGray: '#CBD4C2',     // Ash grey
-    lightGrey: '#CBD4C2',     // Ash grey
+    lightGray: '#ddd',
 
     blue: '#247BA0',          // Celadon Blue
     red: '#FF686B',           // Light Coral
