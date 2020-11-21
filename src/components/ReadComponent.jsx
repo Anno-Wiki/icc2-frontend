@@ -114,21 +114,30 @@ export const ReadComponent = () => {
   }, [toc, tocID])
 
   useEffect(() => {
+    // This effect polls the window to see if there are any selections. If there
+    // are, it makes the annotate button visible
     const getSel = setInterval(() => {
       const sel = window.getSelection();
       const str = sel.toString();
       if (str !== selStore){
         setSelStore(str);
         const box = document.getElementById('annotatebox');
-        if (sel.toString() !== "") {
-          const r = sel.getRangeAt(0);
+        const base = document.getElementById('read');
+        const r = sel.getRangeAt(0);
+        // double check selection is in the read base
+        if (sel.toString() !== "" && base.contains(r.startContainer)) {
+
+          // get the client rectangles and calculate the offset left and top
           const rects = r.getClientRects()[0];
           const transform = `translate(` +
             `${Math.round(rects.x + (rects.width / 2))}px, ` +
             `${Math.round(rects.y + window.scrollY - box.offsetHeight + 8)}px)`;
+
+          // make visible and move
           box.style.transform = transform;
           box.style.opacity = '100%';
         } else {
+          // make invisible, no move
           box.style.opacity = '0';
         }
       }
