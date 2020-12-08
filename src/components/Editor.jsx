@@ -5,15 +5,25 @@ import styled from 'styled-components';
 const EditorBoxClassName = 'public-DraftEditor-content';
 const EditorClassName = 'editor-box';
 
+const MasterParent = styled.div`
+position: absolute;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+height: 100%;
+width: 100%;
+background-color: black;
+display: none;
+`
+
 const Parent = styled.div`
 position: absolute;
 width: 35rem;
 margin: auto;
+transform: translate(50%, 50%);
 border: 1px solid ${({theme}) => theme.color.lightGray};
 background-color: ${({theme}) => theme.color.white};
-right: 0;
-bottom: 0;
-left: 0;
 padding: 0.5rem;
 button {
   border: none;
@@ -59,18 +69,14 @@ class StatefulEditor extends Component {
 
   state = {
     value: RichTextEditor.createEmptyValue()
-  }
+  };
 
   onChange = (value) => {
     this.setState({value});
-    if (this.props.onChange) {
-      // Send the changes up to the parent component as an HTML string.
-      // This is here to demonstrate using `.toString()` but in a real app it
-      // would be better to avoid generating a string on each change.
-      this.props.onChange(
-        value.toString('html')
-      );
-    }
+  };
+
+  onClick = () => {
+    console.log(this.state.value.toString('html'));
   };
 
   render () {
@@ -97,21 +103,23 @@ class StatefulEditor extends Component {
       ]
     };
     return (
-      <Parent>
-        <CloseBar>
-          <Close>&times;</Close>
-        </CloseBar>
-        <RichTextEditor
-          value={this.state.value}
-          onChange={this.onChange}
-          toolbarConfig={toolbarConfig}
-          className={EditorClassName}
-        />
-        <ButtonBar>
-          <Submit>Submit</Submit>
-          <Submit>Cancel</Submit>
-        </ButtonBar>
-      </Parent>
+      <MasterParent>
+        <Parent>
+          <CloseBar>
+            <Close>&times;</Close>
+          </CloseBar>
+          <RichTextEditor
+            value={this.state.value}
+            onChange={this.onChange}
+            toolbarConfig={toolbarConfig}
+            className={EditorClassName}
+          />
+          <ButtonBar>
+            <Submit onClick={this.onClick}>Submit</Submit>
+            <Submit>Cancel</Submit>
+          </ButtonBar>
+        </Parent>
+      </MasterParent>
     );
   }
 }
