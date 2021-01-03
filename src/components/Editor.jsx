@@ -18,8 +18,10 @@ display: ${props => props.editorState ? "block" : "none"};
 `
 
 const Parent = styled.div`
+position: relative;
 width: 35rem;
 margin: auto;
+margin-top: 2rem;
 border: 1px solid ${({theme}) => theme.color.lightGray};
 background-color: ${({theme}) => theme.color.white};
 padding: 0.5rem;
