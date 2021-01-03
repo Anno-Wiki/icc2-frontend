@@ -83,12 +83,7 @@ background-color: ${({theme}) => theme.color.iconbg};
 margin: 0 auto;
 border-radius: 3px;
 `
-const AnnotateBox = () => {
-  const process = (e) => {
-    const base = document.getElementById('read');
-    console.log(getOffsetFromBase(base));
-    e.preventDefault();
-  }
+const AnnotateBox = ({ process }) => {
   return (
     <AnnotateDiv id="annotatebox" onMouseDown={process}>
       <AnnotateButton>
@@ -104,6 +99,10 @@ export const ReadComponent = () => {
   const [toc, setToc] = useState({});
   const [text, setText] = useState({});
   const [selStore, setSelStore] = useState("");
+
+  // to turn the editor visible or invisible
+  const [editorState, setEditorState] = useState(false);
+  const [selectionState, setSelectionState] = useState({});
 
   useEffect(() => {
     axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
@@ -145,6 +144,20 @@ export const ReadComponent = () => {
     return () => clearInterval(getSel);
   })
 
+  // click annotate button
+  const process = (e) => {
+    e.preventDefault();
+    const base = document.getElementById('read');
+    const sel = getOffsetFromBase(base);
+    console.log(sel);
+    setSelectionState(sel);
+    setEditorState(true);
+  }
+
+  // changes the editor's state, passed to the editor
+  const changeEditor = (state) => {
+    setEditorState(state);
+  }
 
   const createText = () => {
     return {__html: text.text}
@@ -152,8 +165,12 @@ export const ReadComponent = () => {
 
   return(
     <div>
-      <AnnotateBox />
-      <Editor />
+      <AnnotateBox process={process} />
+      <Editor
+        editorState={editorState}
+        updateState={changeEditor}
+        selection={selectionState}
+      />
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )

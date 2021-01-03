@@ -6,22 +6,20 @@ const EditorBoxClassName = 'public-DraftEditor-content';
 const EditorClassName = 'editor-box';
 
 const MasterParent = styled.div`
-position: absolute;
-top: 0;
-left: 0;
-bottom: 0;
+position: fixed;
 right: 0;
-height: 100%;
+top: 50%;
 width: 100%;
-background-color: black;
-display: none;
+height: 100%;
+
+transform: translateY(-50%);
+background: rgba(0,0,0,0.5);
+display: ${props => props.editorState ? "block" : "none"};
 `
 
 const Parent = styled.div`
-position: absolute;
 width: 35rem;
 margin: auto;
-transform: translate(50%, 50%);
 border: 1px solid ${({theme}) => theme.color.lightGray};
 background-color: ${({theme}) => theme.color.white};
 padding: 0.5rem;
@@ -45,7 +43,8 @@ const ButtonBar = styled.div`
 text-align: center;
 `
 const CloseBar = styled.div`
-text-align: right;
+position: absolute;
+right: 1rem;
 `
 const Close = styled.a`
 font-size: 2rem;
@@ -103,11 +102,20 @@ class StatefulEditor extends Component {
       ]
     };
     return (
-      <MasterParent>
+      <MasterParent editorState={this.props.editorState}>
         <Parent>
           <CloseBar>
-            <Close>&times;</Close>
+            <Close
+              style={{cursor: "pointer"}}
+              onClick={() => this.props.updateState(false)}
+            >&times;</Close>
           </CloseBar>
+          <h3 style={{ marginLeft: "1rem" }}>Annotating:</h3>
+          <div
+            style={{ padding: "1rem" }}
+          >
+            {this.props.selection.selection}
+          </div>
           <RichTextEditor
             value={this.state.value}
             onChange={this.onChange}
@@ -116,7 +124,11 @@ class StatefulEditor extends Component {
           />
           <ButtonBar>
             <Submit onClick={this.onClick}>Submit</Submit>
-            <Submit>Cancel</Submit>
+            <Submit
+              onClick={() => this.props.updateState(false)}
+            >
+              Cancel
+            </Submit>
           </ButtonBar>
         </Parent>
       </MasterParent>
