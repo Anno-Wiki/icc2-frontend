@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import RichTextEditor from 'react-rte';
 import styled from 'styled-components';
 
@@ -67,7 +67,6 @@ background-color: ${({theme}) => theme.color.lightGray};
 `
 
 class StatefulEditor extends Component {
-
   state = {
     value: RichTextEditor.createEmptyValue()
   };
@@ -78,6 +77,7 @@ class StatefulEditor extends Component {
 
   onClick = () => {
     console.log(this.state.value.toString('html'));
+    this.props.updateState(false);
   };
 
   render () {

@@ -11,7 +11,7 @@ import AppStateProvider from './providers/AppStateProvider';
 
 import { ThemeProvider } from 'styled-components';
 import { theme } from './global/theme';
-import GlobalStyle from "./global/GlobalStyle";
+import GlobalStyle from './global/GlobalStyle';
 
 function App() {
   return (

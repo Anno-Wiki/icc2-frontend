@@ -1,7 +1,8 @@
-import React from 'react'
-import {NavLink} from 'react-router-dom'
-import baseRoutes from '../../constants/routes'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import baseRoutes from '../../constants/routes';
 import styled from 'styled-components';
+import LoginButton from '../Login';
 
 const Nav = styled.nav`
 display: flex;
@@ -27,6 +28,7 @@ const Header = () => {
   return (
     <Nav>
       {routesAsText.map(linkInfo => <Link key={linkInfo[1]} to={linkInfo[1]}>{linkInfo[0]}</Link>)}
+      <LoginButton />
     </Nav>
   )
 }
