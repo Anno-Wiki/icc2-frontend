@@ -1,7 +1,8 @@
 export const theme = {
   font: {
     display: 'Linux Biolinum',
-    text: 'Linux Libertine'
+    text: 'Linux Libertine',
+    sans: 'Roboto',
   },
   color: {
     black: '#212529',

@@ -37,6 +37,18 @@ const GlobalStyle = createGlobalStyle`
   p {
     margin: 1rem 0;
   }
+  button {
+    font-family: ${({theme}) => theme.font.sans};
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+    width: 5rem;
+    font-size: 0.9rem;
+    background-color: ${({theme}) => theme.color.white};
+    :hover {
+      color: ${({theme}) => theme.color.blue};
+    }
+  }
 `
 
 export default GlobalStyle
