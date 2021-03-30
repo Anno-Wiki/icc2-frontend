@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -28,19 +28,13 @@ transition: color ${({theme}) => theme.transition.short} linear;
 `
 
 const Header = () => {
+  const [userMetadata, setUserMetadata] = useState(null);
+  const [loggedin, setLoggedin] = useState(false);
+
   const routesAsText = Object.entries(baseRoutes)
   const { user, isAuthenticated } = useAuth0();
+
   const LogButton = isAuthenticated ? LogoutButton : LoginButton;
-  useEffect(() => {
-    if (isAuthenticated) {
-      axios.get(`/users/${user.sub}`)
-        .then(resp => {
-          console.log(resp);
-        }, error => {
-          console.log(error);
-        });
-    }
-  }, [isAuthenticated]);
   return (
     <Nav>
       {routesAsText.map(linkInfo => <Link key={linkInfo[1]} to={linkInfo[1]}>{linkInfo[0]}</Link>)}
