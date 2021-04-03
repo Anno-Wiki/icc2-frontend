@@ -106,11 +106,13 @@ export const ReadComponent = () => {
 
   useEffect(() => {
     axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
-  }, [textTitle])
+  }, [textTitle]);
 
   useEffect(() => {
-    axios.get(`/toc/${toc.bookid}-${tocID}/formatted`).then(res => setText(res.data)).catch(err => console.log(err));
-  }, [toc, tocID])
+    if (toc !== undefined && toc.bookid !== undefined) {
+        axios.get(`/toc/${toc.bookid}-${tocID}/formatted`).then(res => setText(res.data)).catch(err => console.log(err));
+    }
+  }, [toc, tocID]);
 
   useEffect(() => {
     // This effect polls the window to see if there are any selections. If there
@@ -142,7 +144,7 @@ export const ReadComponent = () => {
       }
     }, 100)
     return () => clearInterval(getSel);
-  })
+  });
 
   // click annotate button
   const process = (e) => {
@@ -157,11 +159,11 @@ export const ReadComponent = () => {
   // changes the editor's state, passed to the editor
   const changeEditor = (state) => {
     setEditorState(state);
-  }
+  };
 
   const createText = () => {
     return {__html: text.text}
-  }
+  };
 
   return(
     <div>
@@ -170,6 +172,7 @@ export const ReadComponent = () => {
         editorState={editorState}
         updateState={changeEditor}
         selection={selectionState}
+        toc={`${toc.bookid}-${tocID}`}
       />
       <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
     </div>

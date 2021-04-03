@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import baseRoutes from '../../constants/routes';
-import axios from '../../utilities/axiosInstance';
 import LoginButton from '../Login';
 import LogoutButton from '../Logout';
 
@@ -28,9 +27,6 @@ transition: color ${({theme}) => theme.transition.short} linear;
 `
 
 const Header = () => {
-  const [userMetadata, setUserMetadata] = useState(null);
-  const [loggedin, setLoggedin] = useState(false);
-
   const routesAsText = Object.entries(baseRoutes)
   const { user, isAuthenticated } = useAuth0();
 

@@ -6,7 +6,6 @@ import { Auth0Provider } from '@auth0/auth0-react';
 
 const domain = process.env.REACT_APP_AUTH0DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0CLIENTID;
-const baseURL = process.env.REACT_APP_DEV_API_URL;
 
 ReactDOM.render(
   <Auth0Provider
