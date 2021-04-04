@@ -28,7 +28,7 @@ transition: color ${({theme}) => theme.transition.short} linear;
 
 const Header = () => {
   const routesAsText = Object.entries(baseRoutes)
-  const { user, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
   const LogButton = isAuthenticated ? LogoutButton : LoginButton;
   return (

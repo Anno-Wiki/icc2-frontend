@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import RichTextEditor from 'react-rte';
 import styled from 'styled-components';
+import { useAuth0 } from '@auth0/auth0-react';
+import axios from '../utilities/axiosInstance';
 
 const EditorBoxClassName = 'public-DraftEditor-content';
 const EditorClassName = 'editor-box';
@@ -65,8 +67,41 @@ background-color: ${({theme}) => theme.color.lightGray};
   color: white;
 }
 `
-const StatefulEditor = ({ updateState, editorState, selection }) => {
+const audience = process.env.REACT_APP_AUTH0AUDIENCE;
+
+const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
   const [value, setValue] = useState(RichTextEditor.createEmptyValue());
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
+  const submit = async (h) => {
+    try {
+      console.log("Trying");
+      const accessToken = await getAccessTokenSilently({
+        audience: audience,
+        scope: "post:annotation",
+      });
+
+      const url = '/annotate/toc/' + toc;
+
+      axios.post(url,
+        {
+          'start': selection.start,
+          'end': selection.end,
+          'text': h,
+          'author': user.sub
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+        .then(resp => {
+          console.log(resp);
+        }, error => {
+          console.log(error);
+        });
+
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
   const handleChange = (val) => {
     setValue(val);
@@ -75,6 +110,10 @@ const StatefulEditor = ({ updateState, editorState, selection }) => {
   const click = () => {
     // updateState is passed as a prop to hide the component
     updateState(false);
+    if (isAuthenticated) {
+      const h = value.toString('html');
+      submit(h);
+    }
   }
   const toolbarConfig = {
     // Optionally specify the groups to display (displayed in the order listed).
