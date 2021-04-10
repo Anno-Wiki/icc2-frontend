@@ -130,10 +130,12 @@ class ReadComponent extends React.Component {
       selectionState: {},
       visible: []             // which annotations are visible
     }
-    this.textTitle = this.props.match.params.textTitle
-    this.tocID = this.props.match.params.tocID
-    this.baseRef = React.createRef();
+    this.textTitle = this.props.match.params.textTitle;
+    this.tocID = this.props.match.params.tocID;
     this.isAuthenticated = true;
+
+    this.baseRef = React.createRef();
+    this.boxRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -150,7 +152,7 @@ class ReadComponent extends React.Component {
     if (str !== this.state.selStore){
       this.setState({ selStore: str })
       const box = document.getElementById('annotatebox');
-      const base = document.getElementById('read');
+      const base = this.baseRef.current;
       const r = sel.getRangeAt(0);
       // double check selection is in the read base and user is authenticated
       if (sel.toString() !== "" && base.contains(r.startContainer) && this.isAuthenticated) {
@@ -186,10 +188,32 @@ class ReadComponent extends React.Component {
     return { __html: this.state.text.text }
   }
 
+  findNodePosition(n) {
+    let seen = 0;
+    let current = 0;
+    for (const node of this.baseRef.current.childNodes) {
+      current += node.textContent.length;
+      if (current >= n) {
+        return [node.firstChild, current - seen];
+      }
+      seen += node.textContent.length;
+    }
+  }
+
+  findLocation(open, close) {
+    const range = new Range();
+    range.setStart(...this.findNodePosition(open));
+    range.setEnd(...this.findNodePosition(close));
+    const rects = range.getClientRects();
+    return rects[rects.length-1].bottom;
+  }
+
   clickAnnotation(i, state) {
     let arr = this.state.visible.slice();
     arr[i] = state;
     this.setState({ visible: arr });
+    const bottom = this.findLocation(this.state.adata.annotations.[i].open, this.state.adata.annotations[i].close);
+    console.log(bottom);
   }
 
   render() {
@@ -201,7 +225,7 @@ class ReadComponent extends React.Component {
         {this.state.adata && this.state.adata.annotations.map((a, i) => 
           <Annotation number={i} handleClick={this.clickAnnotation.bind(this)} text={a.text} visible={this.state.visible[i]} offsets={{ open: a.open, close: a.close }} />
         )}
-        <AnnotateBox process={this.process.bind(this)} />
+        <AnnotateBox ref={this.boxRef} process={this.process.bind(this)} />
         <Editor
           editorState={this.state.editorState}
           updateState={this.changeEditor.bind(this)}
