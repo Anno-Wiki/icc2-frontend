@@ -100,6 +100,7 @@ export const ReadComponent = () => {
   const [toc, setToc] = useState({});
   const [text, setText] = useState({});
   const [selStore, setSelStore] = useState("");
+  const [annotations, setAnnotations] = useState({});
 
   // to turn the editor visible or invisible
   const [editorState, setEditorState] = useState(false);
@@ -116,6 +117,12 @@ export const ReadComponent = () => {
         axios.get(`/toc/${toc.bookid}-${tocID}/formatted`).then(res => setText(res.data)).catch(err => console.log(err));
     }
   }, [toc, tocID]);
+
+  useEffect(() => {
+    if (toc !== undefined && toc.bookid !== undefined) {
+      axios.get(`/annotations/toc/${toc.bookid}-${tocID}`).then(res => setAnnotations(res.data)).catch(err => console.log(err));
+    }
+  }, [toc, tocID])
 
   useEffect(() => {
     // This effect polls the window to see if there are any selections. If there
