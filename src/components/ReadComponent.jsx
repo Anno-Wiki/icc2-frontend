@@ -120,8 +120,9 @@ class ReadComponent extends React.Component {
   async componentDidMount() {
     await axios.get(`/text/${this.textTitle}`).then(res => { this.setState({ toc: res.data }) }).catch(err => console.log(err));
     axios.get(`/toc/${this.state.toc.bookid}-${this.tocID}/formatted`).then(res => this.setState({ text: res.data })).catch(err => console.log(err));
-    axios.get(`/annotations/toc/${this.state.toc.bookid}-${this.tocID}`).then(res => this.setState({ adata: res.data })).catch(err => console.log(err));
     setInterval(() => this.getSel(), 100);
+    await axios.get(`/annotations/toc/${this.state.toc.bookid}-${this.tocID}`).then(res => this.setState({ adata: res.data })).catch(err => console.log(err));
+    console.log(this.state.adata)
   }
 
   getSel() {

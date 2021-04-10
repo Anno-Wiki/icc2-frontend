@@ -6,7 +6,7 @@ import { breakpoints } from '../../global/breakpoints';
 const Body = styled.div`
 width: 50%;
 margin: 1rem auto;
-${breakpoints.vp8} {
+${breakpoints.vp10} {
   width: 80%;
 }
 `
