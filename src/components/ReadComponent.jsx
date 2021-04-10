@@ -95,18 +95,24 @@ const AnnotateBox = ({ process }) => {
   )
 }
 
+const AnnotationMarker = styled.div`
+
+`
+
 export const ReadComponent = () => {
   const {textTitle, tocID} = useParams();
   const [toc, setToc] = useState({});
   const [text, setText] = useState({});
   const [selStore, setSelStore] = useState("");
-  const [annotations, setAnnotations] = useState({});
+  const [aData, setAData] = useState({});
+  const [annotations, setAnnotations] = useState([]);
+  const baseRef = React.createRef();
 
   // to turn the editor visible or invisible
   const [editorState, setEditorState] = useState(false);
   const [selectionState, setSelectionState] = useState({});
 
-  const { isAuthenticated } = useAuth0();
+  const isAuthenticated = true;
 
   useEffect(() => {
     axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
@@ -120,7 +126,7 @@ export const ReadComponent = () => {
 
   useEffect(() => {
     if (toc !== undefined && toc.bookid !== undefined) {
-      axios.get(`/annotations/toc/${toc.bookid}-${tocID}`).then(res => setAnnotations(res.data)).catch(err => console.log(err));
+      axios.get(`/annotations/toc/${toc.bookid}-${tocID}`).then(res => setAData(res.data)).catch(err => console.log(err));
     }
   }, [toc, tocID])
 
@@ -159,11 +165,24 @@ export const ReadComponent = () => {
   // click annotate button
   const process = (e) => {
     e.preventDefault();
-    const base = document.getElementById('read');
-    const sel = getOffsetFromBase(base);
-    console.log(sel);
+    const sel = getOffsetFromBase(baseRef.current);
     setSelectionState(sel);
     setEditorState(true);
+  }
+
+  useEffect(() => {
+    if (aData && Object.keys(aData).length > 0) {
+      layAnnotations();
+    }
+  }, [aData])
+
+  const layAnnotations = () => {
+    for (const a of aData.annotations) {
+      let range = new Range();
+      console.log(baseRef.firstChild);
+      console.log(a['open']);
+      console.log(a['close']);
+    }
   }
 
   // changes the editor's state, passed to the editor
@@ -184,7 +203,7 @@ export const ReadComponent = () => {
         selection={selectionState}
         toc={`${toc.bookid}-${tocID}`}
       />
-      <ReadBase id='read' dangerouslySetInnerHTML={createText()} />
+      <ReadBase ref={baseRef} id='read' dangerouslySetInnerHTML={createText()} />
     </div>
   )
 }
