@@ -159,12 +159,8 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
           className={EditorClassName}
         />
         <ButtonBar>
-          <Submit onClick={click}>Submit</Submit>
-          <Submit
-            onClick={() => updateState(false)}
-          >
-            Cancel
-          </Submit>
+          <Submit onClick={() => click()}>Submit</Submit>
+          <Submit onClick={() => updateState(false)}>Cancel</Submit>
         </ButtonBar>
       </Parent>
     </MasterParent>

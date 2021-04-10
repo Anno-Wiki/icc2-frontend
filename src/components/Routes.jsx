@@ -1,10 +1,10 @@
 import React from 'react'
-import {Route, Switch} from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import routes from '../constants/routes'
 
 import { TextsComponent } from './TextsComponent';
 import { TocComponent } from './TocComponent';
-import { ReadComponent } from './ReadComponent';
+import ReadComponent from './ReadComponent';
 import { Profile } from './UserProfile.jsx';
 
 
