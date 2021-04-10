@@ -1,5 +1,6 @@
 export const theme = {
   font: {
+    nav: 'Roboto',
     display: 'Linux Biolinum',
     text: 'Linux Libertine',
     sans: 'Roboto',

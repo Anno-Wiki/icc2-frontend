@@ -6,6 +6,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import baseRoutes from '../../constants/routes';
 import LoginButton from '../Login';
 import LogoutButton from '../Logout';
+import { breakpoints } from '../../global/breakpoints';
 
 const Nav = styled.nav`
 display: flex;
@@ -13,10 +14,13 @@ justify-content: space-around;
 padding: 1rem 0;
 margin: 0 auto;
 width: 50%;
+${breakpoints.vp8} {
+  width: 90%;
+}
 `
 const Link = styled(NavLink)`
 text-decoration: none;
-font-family: ${({theme}) => theme.font.display};
+font-family: ${({theme}) => theme.font.nav};
 font-weight: bold;
 font-size: 1.5rem;
 color: ${({theme}) => theme.color.black};
