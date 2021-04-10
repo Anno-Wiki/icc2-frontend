@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from '../utilities/axiosInstance';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuth0 } from '@auth0/auth0-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen as annotate } from '@fortawesome/free-solid-svg-icons';
 import { default as Editor } from './Editor';
@@ -104,6 +105,8 @@ export const ReadComponent = () => {
   const [editorState, setEditorState] = useState(false);
   const [selectionState, setSelectionState] = useState({});
 
+  const { isAuthenticated } = useAuth0();
+
   useEffect(() => {
     axios.get(`/text/${textTitle}`).then(res => setToc(res.data)).catch(err => console.log(err));
   }, [textTitle]);
@@ -125,8 +128,8 @@ export const ReadComponent = () => {
         const box = document.getElementById('annotatebox');
         const base = document.getElementById('read');
         const r = sel.getRangeAt(0);
-        // double check selection is in the read base
-        if (sel.toString() !== "" && base.contains(r.startContainer)) {
+        // double check selection is in the read base and user is authenticated
+        if (sel.toString() !== "" && base.contains(r.startContainer) && isAuthenticated) {
 
           // get the client rectangles and calculate the offset left and top
           const rects = r.getClientRects()[0];
