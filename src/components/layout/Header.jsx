@@ -13,10 +13,7 @@ display: flex;
 justify-content: space-around;
 padding: 1rem 0;
 margin: 0 auto;
-width: 50%;
-${breakpoints.vp8} {
-  width: 90%;
-}
+width: 90%;
 `
 const Link = styled(NavLink)`
 text-decoration: none;
