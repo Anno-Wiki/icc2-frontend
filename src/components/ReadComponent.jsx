@@ -100,7 +100,7 @@ width: fit-content;
 `
 const AnnotationMarker = (props) => {
   return (
-    <StyledAnnotationMarker>
+    <StyledAnnotationMarker onClick={() => props.handleClick(props.number, true)}>
       [{ props.number }]
     </StyledAnnotationMarker>
   )
@@ -111,7 +111,8 @@ border-color: ${({theme}) => theme.color.black};
 `
 const Annotation = (props) => {
   return (
-    <StyledAnnotation>
+    <StyledAnnotation key={props.number} style={{ display: props.visible ? 'block' : 'none' }}>
+      <button onClick={() => props.handleClick(props.number, false)}>&times;</button>
       <div dangerouslySetInnerHTML={{ __html: props.text }} />
     </StyledAnnotation>
   )
@@ -124,11 +125,10 @@ class ReadComponent extends React.Component {
     this.state = {
       toc: {},
       text: {},
-      selStore: "",
-      aDate: {},           // annotation data
-      annotations: [],     // annotation divs
-      editorState: false,  // to turn the editor visible or invisible
+      adata: null,            // annotation data
+      editorState: false,     // to turn the editor visible or invisible
       selectionState: {},
+      visible: []             // which annotations are visible
     }
     this.textTitle = this.props.match.params.textTitle
     this.tocID = this.props.match.params.tocID
@@ -141,7 +141,7 @@ class ReadComponent extends React.Component {
     axios.get(`/toc/${this.state.toc.bookid}-${this.tocID}/formatted`).then(res => this.setState({ text: res.data })).catch(err => console.log(err));
     setInterval(() => this.getSel(), 100);
     await axios.get(`/annotations/toc/${this.state.toc.bookid}-${this.tocID}`).then(res => this.setState({ adata: res.data })).catch(err => console.log(err));
-    console.log(this.state.adata)
+    this.setState({ visible: Array(this.state.adata.annotations.length).fill(false) });
   }
 
   getSel() {
@@ -186,14 +186,20 @@ class ReadComponent extends React.Component {
     return { __html: this.state.text.text }
   }
 
+  clickAnnotation(i, state) {
+    let arr = this.state.visible.slice();
+    arr[i] = state;
+    this.setState({ visible: arr });
+  }
+
   render() {
     return (
       <div>
         {this.state.adata && this.state.adata.annotations.map((a, i) => 
-          <AnnotationMarker number={i} offsets={{ open: a.open, close: a.close }} />
+          <AnnotationMarker number={i} handleClick={this.clickAnnotation.bind(this)} offsets={{ open: a.open, close: a.close }} />
         )}
         {this.state.adata && this.state.adata.annotations.map((a, i) => 
-          <Annotation text={a.text} offsets={{ open: a.open, close: a.close }} />
+          <Annotation number={i} handleClick={this.clickAnnotation.bind(this)} text={a.text} visible={this.state.visible[i]} offsets={{ open: a.open, close: a.close }} />
         )}
         <AnnotateBox process={this.process.bind(this)} />
         <Editor
