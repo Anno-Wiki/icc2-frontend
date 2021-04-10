@@ -95,9 +95,28 @@ const AnnotateBox = ({ process }) => {
   )
 }
 
-const AnnotationMarker = styled.div`
-
+const StyledAnnotationMarker = styled.button`
+width: fit-content;
 `
+const AnnotationMarker = (props) => {
+  return (
+    <StyledAnnotationMarker>
+      [{ props.number }]
+    </StyledAnnotationMarker>
+  )
+}
+const StyledAnnotation = styled.div`
+background-color: ${({theme}) => theme.color.white};
+border-color: ${({theme}) => theme.color.black};
+`
+const Annotation = (props) => {
+  return (
+    <StyledAnnotation>
+      <div dangerouslySetInnerHTML={{ __html: props.text }} />
+    </StyledAnnotation>
+  )
+}
+
 
 class ReadComponent extends React.Component {
   constructor(props) {
@@ -170,6 +189,12 @@ class ReadComponent extends React.Component {
   render() {
     return (
       <div>
+        {this.state.adata && this.state.adata.annotations.map((a, i) => 
+          <AnnotationMarker number={i} offsets={{ open: a.open, close: a.close }} />
+        )}
+        {this.state.adata && this.state.adata.annotations.map((a, i) => 
+          <Annotation text={a.text} offsets={{ open: a.open, close: a.close }} />
+        )}
         <AnnotateBox process={this.process.bind(this)} />
         <Editor
           editorState={this.state.editorState}
