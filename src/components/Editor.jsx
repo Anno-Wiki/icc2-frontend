@@ -74,6 +74,7 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const submit = async (h) => {
+    console.log("Submitted");
     try {
       console.log("Trying");
       const accessToken = await getAccessTokenSilently({
@@ -109,6 +110,7 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
 
   const click = () => {
     // updateState is passed as a prop to hide the component
+    console.log("Clicked");
     updateState(false);
     if (isAuthenticated) {
       const h = value.toString('html');

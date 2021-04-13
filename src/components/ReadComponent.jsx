@@ -97,10 +97,15 @@ const AnnotateBox = ({ process }) => {
 
 const StyledAnnotationMarker = styled.button`
 width: fit-content;
+display: absolute;
+top: 0;
+left: 0;
+transform: translate(${props => props.X}px, ${props => props.Y}px);
 `
 const AnnotationMarker = (props) => {
+  console.log(props.X);
   return (
-    <StyledAnnotationMarker onClick={() => props.handleClick(props.number, true)}>
+    <StyledAnnotationMarker X={props.X} Y={props.Y} onClick={() => props.handleClick(props.number, true)}>
       [{ props.number }]
     </StyledAnnotationMarker>
   )
@@ -111,7 +116,7 @@ border-color: ${({theme}) => theme.color.black};
 `
 const Annotation = (props) => {
   return (
-    <StyledAnnotation key={props.number} style={{ display: props.visible ? 'block' : 'none' }}>
+    <StyledAnnotation style={{ display: props.visible ? 'block' : 'none' }}>
       <button onClick={() => props.handleClick(props.number, false)}>&times;</button>
       <div dangerouslySetInnerHTML={{ __html: props.text }} />
     </StyledAnnotation>
@@ -126,8 +131,10 @@ class ReadComponent extends React.Component {
       toc: {},
       text: {},
       adata: null,            // annotation data
+      amarkers: null,
       editorState: false,     // to turn the editor visible or invisible
       selectionState: {},
+      postions: [],
       visible: []             // which annotations are visible
     }
     this.textTitle = this.props.match.params.textTitle;
@@ -143,8 +150,24 @@ class ReadComponent extends React.Component {
     axios.get(`/toc/${this.state.toc.bookid}-${this.tocID}/formatted`).then(res => this.setState({ text: res.data })).catch(err => console.log(err));
     setInterval(() => this.getSel(), 100);
     await axios.get(`/annotations/toc/${this.state.toc.bookid}-${this.tocID}`).then(res => this.setState({ adata: res.data })).catch(err => console.log(err));
-    this.setState({ visible: Array(this.state.adata.annotations.length).fill(false) });
+    if (this.state.adata){
+      this.setState({ visible: Array(this.state.adata.annotations.length).fill(false) });
+
+    }
   }
+  /*componentDidUpdate() {
+    let amarkers = [];
+    const annotations = this.state.adata.annotations;
+    for (let i = 0; i < annotations.length; i++) {
+      amarkers.push(
+        <AnnotationMarker
+          Y={this.findLocation(annotations[i].open, annotations[i].close)}
+          number={i}
+          handleClick={this.clickAnnotation}
+        />
+      )
+    }
+  }*/
 
   getSel() {
     const sel = window.getSelection();
@@ -152,10 +175,10 @@ class ReadComponent extends React.Component {
     if (str !== this.state.selStore){
       this.setState({ selStore: str })
       const box = document.getElementById('annotatebox');
-      const base = this.baseRef.current;
+      const base = document.getElementById('read');
       const r = sel.getRangeAt(0);
       // double check selection is in the read base and user is authenticated
-      if (sel.toString() !== "" && base.contains(r.startContainer) && this.isAuthenticated) {
+      if (base !== null && box !== null && sel.toString() !== "" && base.contains(r.startContainer) && this.isAuthenticated) {
 
         // get the client rectangles and calculate the offset left and top
         const rects = r.getClientRects()[0];
@@ -166,7 +189,7 @@ class ReadComponent extends React.Component {
         // make visible and move
         box.style.transform = transform;
         box.style.opacity = '100%';
-      } else {
+      } else if (box !== null){
         // make invisible, no move
         box.style.opacity = '0';
       }
@@ -188,27 +211,36 @@ class ReadComponent extends React.Component {
     return { __html: this.state.text.text }
   }
 
-  findNodePosition(n) {
+  findNodePos = (n) => {
     let seen = 0;
     let current = 0;
-    for (const node of this.baseRef.current.childNodes) {
-      current += node.textContent.length;
+    const base = this.baseRef.current;
+    const nodes = base.childNodes;
+    for (let i = 0; i < nodes.length; i++) {
+      current += nodes[i].textContent.length;
       if (current >= n) {
-        return [node.firstChild, current - seen];
+        return [nodes[i].firstChild, n - seen];
       }
-      seen += node.textContent.length;
+      seen += nodes[i].textContent.length;
+    }
+    console.log(current, n)
+  }
+
+  findLocation = (open, close) => {
+    const range = new Range();
+    var a = this.findNodePos(open);
+    var b = this.findNodePos(close);
+    try {
+      range.setStart(...a);
+      range.setEnd(...b);
+      const rects = range.getClientRects();
+      return rects[rects.length-1].bottom;
+    } catch {
+      return 100;
     }
   }
 
-  findLocation(open, close) {
-    const range = new Range();
-    range.setStart(...this.findNodePosition(open));
-    range.setEnd(...this.findNodePosition(close));
-    const rects = range.getClientRects();
-    return rects[rects.length-1].bottom;
-  }
-
-  clickAnnotation(i, state) {
+  clickAnnotation = (i, state) => {
     let arr = this.state.visible.slice();
     arr[i] = state;
     this.setState({ visible: arr });
@@ -216,14 +248,20 @@ class ReadComponent extends React.Component {
     console.log(bottom);
   }
 
+  findX = () => {
+    const rects = this.baseRef.current.getClientRects();
+    console.log(rects);
+    return rects[0].right;
+  }
+
   render() {
     return (
       <div>
-        {this.state.adata && this.state.adata.annotations.map((a, i) => 
-          <AnnotationMarker number={i} handleClick={this.clickAnnotation.bind(this)} offsets={{ open: a.open, close: a.close }} />
+        {this.state.adata && this.state.adata.annotations.map((a, i) =>
+          <AnnotationMarker X={this.findX()} Y={this.findLocation(a.open, a.close)} key={i} number={i} handleClick={this.clickAnnotation} />
         )}
-        {this.state.adata && this.state.adata.annotations.map((a, i) => 
-          <Annotation number={i} handleClick={this.clickAnnotation.bind(this)} text={a.text} visible={this.state.visible[i]} offsets={{ open: a.open, close: a.close }} />
+        {this.state.adata && this.state.adata.annotations.map((a, i) =>
+          <Annotation key={i} number={i} handleClick={this.clickAnnotation} text={a.text} visible={this.state.visible[i]} offsets={{ open: a.open, close: a.close }} />
         )}
         <AnnotateBox ref={this.boxRef} process={this.process.bind(this)} />
         <Editor
