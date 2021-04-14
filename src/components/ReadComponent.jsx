@@ -97,9 +97,7 @@ const AnnotateBox = ({ process }) => {
 
 const StyledAnnotationMarker = styled.button`
 width: fit-content;
-display: absolute;
-top: 0;
-left: 0;
+position: absolute;
 transform: translate(${props => props.X}px, ${props => props.Y}px);
 `
 const AnnotationMarker = (props) => {
@@ -113,10 +111,16 @@ const AnnotationMarker = (props) => {
 const StyledAnnotation = styled.div`
 background-color: ${({theme}) => theme.color.white};
 border-color: ${({theme}) => theme.color.black};
+border: solid 1px black;
+position: absolute;
+width: 500px;
+padding: 1rem;
+top: ${props => props.Y}px;
+left: ${props=> props.X}px;
 `
 const Annotation = (props) => {
   return (
-    <StyledAnnotation style={{ display: props.visible ? 'block' : 'none' }}>
+    <StyledAnnotation X={props.X} Y={props.Y} style={{ display: props.visible ? 'block' : 'none' }}>
       <button onClick={() => props.handleClick(props.number, false)}>&times;</button>
       <div dangerouslySetInnerHTML={{ __html: props.text }} />
     </StyledAnnotation>
@@ -155,19 +159,6 @@ class ReadComponent extends React.Component {
 
     }
   }
-  /*componentDidUpdate() {
-    let amarkers = [];
-    const annotations = this.state.adata.annotations;
-    for (let i = 0; i < annotations.length; i++) {
-      amarkers.push(
-        <AnnotationMarker
-          Y={this.findLocation(annotations[i].open, annotations[i].close)}
-          number={i}
-          handleClick={this.clickAnnotation}
-        />
-      )
-    }
-  }*/
 
   getSel() {
     const sel = window.getSelection();
@@ -223,7 +214,6 @@ class ReadComponent extends React.Component {
       }
       seen += nodes[i].textContent.length;
     }
-    console.log(current, n)
   }
 
   findLocation = (open, close) => {
@@ -234,7 +224,9 @@ class ReadComponent extends React.Component {
       range.setStart(...a);
       range.setEnd(...b);
       const rects = range.getClientRects();
-      return rects[rects.length-1].bottom;
+      const pos = rects[rects.length-1].bottom;
+      console.log(pos);
+      return pos;
     } catch {
       return 100;
     }
@@ -244,24 +236,41 @@ class ReadComponent extends React.Component {
     let arr = this.state.visible.slice();
     arr[i] = state;
     this.setState({ visible: arr });
-    const bottom = this.findLocation(this.state.adata.annotations.[i].open, this.state.adata.annotations[i].close);
-    console.log(bottom);
   }
 
-  findX = () => {
+  findMarkerX = () => {
     const rects = this.baseRef.current.getClientRects();
-    console.log(rects);
-    return rects[0].right;
+    const pos = rects[0].right - rects[0].left;
+    return pos;
+  }
+  findAnnoX = () => {
+    const rects = this.baseRef.current.getClientRects();
+    const pos = rects[0].right - rects[0].left;
+    return pos;
   }
 
   render() {
     return (
       <div>
         {this.state.adata && this.state.adata.annotations.map((a, i) =>
-          <AnnotationMarker X={this.findX()} Y={this.findLocation(a.open, a.close)} key={i} number={i} handleClick={this.clickAnnotation} />
+          <AnnotationMarker
+            key={i}
+            X={this.findMarkerX()}
+            Y={this.findLocation(a.open, a.close)}
+            number={i}
+            handleClick={this.clickAnnotation}
+          />
         )}
         {this.state.adata && this.state.adata.annotations.map((a, i) =>
-          <Annotation key={i} number={i} handleClick={this.clickAnnotation} text={a.text} visible={this.state.visible[i]} offsets={{ open: a.open, close: a.close }} />
+          <Annotation
+            key={i}
+            X={this.findAnnoX()}
+            Y={this.findLocation(a.open, a.close)}
+            number={i}
+            handleClick={this.clickAnnotation}
+            text={a.text}
+            visible={this.state.visible[i]}
+          />
         )}
         <AnnotateBox ref={this.boxRef} process={this.process.bind(this)} />
         <Editor
