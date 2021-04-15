@@ -49,6 +49,8 @@ function getOffsetFromBase(element) {
 
 const ReadBase = styled.div`
 line-height: 1.2rem;
+position: absolute;
+width: 50%;
 `
 const AnnotateDiv = styled.div`
 position: absolute;
@@ -98,6 +100,7 @@ const AnnotateBox = ({ process }) => {
 const StyledAnnotationMarker = styled.button`
 width: fit-content;
 position: absolute;
+z-index: 10;
 transform: translate(${props => props.X}px, ${props => props.Y}px);
 `
 const AnnotationMarker = (props) => {
@@ -117,6 +120,7 @@ width: 500px;
 padding: 1rem;
 top: ${props => props.Y}px;
 left: ${props=> props.X}px;
+z-index: 10;
 `
 const Annotation = (props) => {
   return (
