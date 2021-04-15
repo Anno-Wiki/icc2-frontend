@@ -50,7 +50,9 @@ function getOffsetFromBase(element) {
 const ReadBase = styled.div`
 line-height: 1.2rem;
 position: absolute;
-width: 50%;
+transform: translate(-3rem,0);
+width: 60%;
+padding: 0 1rem;
 `
 const AnnotateDiv = styled.div`
 position: absolute;
