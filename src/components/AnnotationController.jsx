@@ -35,7 +35,6 @@ const AnnotationController = ({
   childNodes,
   rects,
 }) => {
-
   const textNodesUnder = (node) => {
     var all = [];
     for (node=node.firstChild;node;node=node.nextSibling){
@@ -45,29 +44,45 @@ const AnnotationController = ({
     return all;
   }
 
+  const clearSelection = () => {
+
+    if (window.getSelection) {
+      if (window.getSelection().empty) {  // Chrome
+        window.getSelection().empty();
+      } else if (window.getSelection().removeAllRanges) {  // Firefox
+        window.getSelection().removeAllRanges();
+      }
+    } else if (document.selection) {  // IE?
+      document.selection.empty();
+    }
+
+  }
+
   const findNodePos = n => {
+    const sel = window.getSelection();
     let seen = 0;
     let current = 0;
-    const nodes = childNodes;
+    const nodes = textNodesUnder(document.getElementById('read'));
     for (let i = 0; i < nodes.length; i++) {
-      const textNodes = textNodesUnder(nodes[i]);
-      current += 1 // for returns and such
-      for (let j = 0; j < textNodes.length; j++) {
-        current += textNodes[j].length;
-        if (current >= n) {
-          return [textNodes[j], n - seen];
-        }
-        seen += nodes[i].length;
+      const range = new Range();
+      range.selectNodeContents(document.getElementById('read'));
+      range.setEnd(nodes[i], nodes[i].length);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      current += sel.toString().replace(/\r\n/g, '\n').length;
+      if (current >= n) {
+        clearSelection();
+        return [nodes[i], n - seen];
       }
-      seen += 1 // for returns and such
+      seen += current - seen;
     }
+    clearSelection();
   };
 
   const findLocation = (open, close) => {
     const range = new Range();
     const a = findNodePos(open);
     const b = findNodePos(close);
-    console.log(open, close, a, b)
     try {
       range.setStart(...a);
       range.setEnd(...b);
