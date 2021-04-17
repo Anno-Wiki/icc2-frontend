@@ -45,7 +45,6 @@ const AnnotationController = ({
   }
 
   const clearSelection = () => {
-
     if (window.getSelection) {
       if (window.getSelection().empty) {  // Chrome
         window.getSelection().empty();
@@ -59,40 +58,42 @@ const AnnotationController = ({
   }
 
   const findNodePos = n => {
-    const sel = window.getSelection();
+    const skippers = ['span', 'i', 'b']
     let seen = 0;
     let current = 0;
-    const nodes = textNodesUnder(document.getElementById('read'));
+    const base = document.getElementById('read');
+    const nodes = textNodesUnder(base);
+    let lastParent = base.firstChild;
     for (let i = 0; i < nodes.length; i++) {
-      const range = new Range();
-      range.selectNodeContents(document.getElementById('read'));
-      range.setEnd(nodes[i], nodes[i].length);
-      sel.removeAllRanges();
-      sel.addRange(range);
-      current += sel.toString().replace(/\r\n/g, '\n').length;
+      current += nodes[i].length;
+      const parent = nodes[i].parentNode;
+      if (parent !== lastParent && !skippers.includes(parent.tagName)) {
+        console.log(parent);
+        lastParent = parent;
+        current += 1 // add a return for every regular element
+      }
       if (current >= n) {
-        clearSelection();
         return [nodes[i], n - seen];
       }
       seen += current - seen;
     }
-    clearSelection();
   };
 
   const findLocation = (open, close) => {
     const range = new Range();
     const a = findNodePos(open);
     const b = findNodePos(close);
+    console.log(open, close, a, b);
     try {
       range.setStart(...a);
       range.setEnd(...b);
-      const el = document.createElement('span');
-      el.style.backgroundColor = 'yellow';
-      range.surroundContents(el);
+      console.log("Start successful")
+      console.log("Close successful")
       const rects = range.getClientRects();
       const pos = rects[rects.length - 1].top;
       return pos;
-    } catch {
+    } catch(err) {
+      console.log(open, close, err, range);
       return 100;
     }
   };
