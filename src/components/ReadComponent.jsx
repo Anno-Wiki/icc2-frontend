@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import axios from '../utilities/axiosInstance';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuth0 } from '@auth0/auth0-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen as annotate } from '@fortawesome/free-solid-svg-icons';
+import { faPen as annotateIcon } from '@fortawesome/free-solid-svg-icons';
 import { default as Editor } from './Editor';
 
 function getOffsetFromBase(element) {
@@ -49,10 +48,6 @@ function getOffsetFromBase(element) {
 
 const ReadBase = styled.div`
 line-height: 1.2rem;
-position: absolute;
-transform: translate(-3rem,0);
-width: 60%;
-padding: 0 1rem;
 `
 const AnnotateDiv = styled.div`
 position: absolute;
@@ -88,11 +83,11 @@ background-color: ${({theme}) => theme.color.iconbg};
 margin: 0 auto;
 border-radius: 3px;
 `
-const AnnotateBox = ({ process }) => {
+const AnnotateBox = (props) => {
   return (
-    <AnnotateDiv id="annotatebox" onMouseDown={process}>
+    <AnnotateDiv id="annotatebox" onMouseDown={props.handleClick}>
       <AnnotateButton>
-        <AnnotateIcon icon={annotate} />
+        <AnnotateIcon icon={annotateIcon} />
       </AnnotateButton>
       <AnnotateArrow />
     </AnnotateDiv>
@@ -106,7 +101,6 @@ z-index: 10;
 transform: translate(${props => props.X}px, ${props => props.Y}px);
 `
 const AnnotationMarker = (props) => {
-  console.log(props.X);
   return (
     <StyledAnnotationMarker X={props.X} Y={props.Y} onClick={() => props.handleClick(props.number, true)}>
       [{ props.number }]
@@ -159,10 +153,13 @@ class ReadComponent extends React.Component {
     await axios.get(`/text/${this.textTitle}`).then(res => { this.setState({ toc: res.data }) }).catch(err => console.log(err));
     axios.get(`/toc/${this.state.toc.bookid}-${this.tocID}/formatted`).then(res => this.setState({ text: res.data })).catch(err => console.log(err));
     setInterval(() => this.getSel(), 100);
+    this.getAnnotations();
+  }
+
+  getAnnotations = async () => {
     await axios.get(`/annotations/toc/${this.state.toc.bookid}-${this.tocID}`).then(res => this.setState({ adata: res.data })).catch(err => console.log(err));
     if (this.state.adata){
       this.setState({ visible: Array(this.state.adata.annotations.length).fill(false) });
-
     }
   }
 
@@ -193,8 +190,7 @@ class ReadComponent extends React.Component {
     }
   }
 
-  // click annotate button
-  process(e) {
+  clickAnnotateButton(e) {
     e.preventDefault();
     const sel = getOffsetFromBase(this.baseRef.current);
     this.setState({ selectionState: sel, editorState: true })
@@ -203,6 +199,7 @@ class ReadComponent extends React.Component {
   // changes the editor's state, passed to the editor
   changeEditor(state) {
     this.setState({ editorState: state })
+    this.getAnnotations();
   }
   createText() {
     return { __html: this.state.text.text }
@@ -231,7 +228,6 @@ class ReadComponent extends React.Component {
       range.setEnd(...b);
       const rects = range.getClientRects();
       const pos = rects[rects.length-1].bottom;
-      console.log(pos);
       return pos;
     } catch {
       return 100;
@@ -263,7 +259,7 @@ class ReadComponent extends React.Component {
             key={i}
             X={this.findMarkerX()}
             Y={this.findLocation(a.open, a.close)}
-            number={i}
+            number={i+1}
             handleClick={this.clickAnnotation}
           />
         )}
@@ -272,13 +268,13 @@ class ReadComponent extends React.Component {
             key={i}
             X={this.findAnnoX()}
             Y={this.findLocation(a.open, a.close)}
-            number={i}
+            number={i+1}
             handleClick={this.clickAnnotation}
             text={a.text}
             visible={this.state.visible[i]}
           />
         )}
-        <AnnotateBox ref={this.boxRef} process={this.process.bind(this)} />
+        <AnnotateBox ref={this.boxRef} handleClick={this.clickAnnotateButton.bind(this)} />
         <Editor
           editorState={this.state.editorState}
           updateState={this.changeEditor.bind(this)}
