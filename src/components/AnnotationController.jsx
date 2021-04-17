@@ -51,13 +51,15 @@ const AnnotationController = ({
   const findLocation = (open, close) => {
     const range = new Range();
     var a = findNodePos(open);
-    console.log(a);
     var b = findNodePos(close);
     try {
       range.setStart(...a);
       range.setEnd(...b);
+      const span = document.createElement('span');
+      span.style.color = 'red';
+      range.surroundContents(span);
       const rects = range.getClientRects();
-      const pos = rects[rects.length - 1].bottom;
+      const pos = rects[rects.length - 1].top;
       return pos;
     } catch {
       return 100;
