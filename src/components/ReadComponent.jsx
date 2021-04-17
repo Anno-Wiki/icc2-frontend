@@ -166,7 +166,7 @@ class ReadComponent extends React.Component {
   getSel() {
     const sel = window.getSelection();
     const str = sel.toString();
-    if (str !== this.state.selStore){
+    if (str !== this.state.selStore && sel.rangeCount > 0){
       this.setState({ selStore: str })
       const box = document.getElementById('annotatebox');
       const base = document.getElementById('read');
