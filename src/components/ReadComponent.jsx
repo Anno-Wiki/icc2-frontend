@@ -98,7 +98,7 @@ const StyledAnnotationMarker = styled.button`
 width: fit-content;
 position: absolute;
 z-index: 10;
-transform: translate(${props => props.X}px, ${props => props.Y}px);
+top: ${props => props.Y}px;
 `
 const AnnotationMarker = (props) => {
   return (
@@ -250,15 +250,27 @@ class ReadComponent extends React.Component {
     const pos = rects[0].right - rects[0].left;
     return pos;
   }
+  findRects = () => {
+    return this.baseRef.current.getClientRects();
+  }
 
   render() {
     return (
       <div>
+        <AnnotateBox ref={this.boxRef} handleClick={this.clickAnnotateButton.bind(this)} />
+        <Editor
+          editorState={this.state.editorState}
+          updateState={this.changeEditor.bind(this)}
+          selection={this.state.selectionState}
+          toc={`${this.state.toc.bookid}-${this.tocID}`}
+        />
+        <ReadBase ref={this.baseRef} id='read' dangerouslySetInnerHTML={this.createText()} />
         {this.state.adata && this.state.adata.annotations.map((a, i) =>
           <AnnotationMarker
             key={i}
             X={this.findMarkerX()}
             Y={this.findLocation(a.open, a.close)}
+            rects={this.findRects()}
             number={i+1}
             handleClick={this.clickAnnotation}
           />
@@ -274,14 +286,6 @@ class ReadComponent extends React.Component {
             visible={this.state.visible[i]}
           />
         )}
-        <AnnotateBox ref={this.boxRef} handleClick={this.clickAnnotateButton.bind(this)} />
-        <Editor
-          editorState={this.state.editorState}
-          updateState={this.changeEditor.bind(this)}
-          selection={this.state.selectionState}
-          toc={`${this.state.toc.bookid}-${this.tocID}`}
-        />
-        <ReadBase ref={this.baseRef} id='read' dangerouslySetInnerHTML={this.createText()} />
       </div>
     )
   }
