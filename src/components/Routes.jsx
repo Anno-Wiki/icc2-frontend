@@ -4,8 +4,8 @@ import routes from '../constants/routes'
 
 import { TextsComponent } from './TextsComponent';
 import { TocComponent } from './TocComponent';
-import ReadComponent from './ReadComponent';
 import { Profile } from './UserProfile.jsx';
+import ReadContainer from "../containers/ReadContainer";
 
 
 const Routes = () => {
@@ -16,7 +16,7 @@ const Routes = () => {
       <Route exact path={routes.Writers} component={TextsComponent} />
       <Route exact path={routes.Text} component={TextsComponent} />
       <Route exact path={`${routes.Text}/:textTitle`} component={TocComponent} />
-      <Route exact path={`${routes.Text}/:textTitle/:tocID`} component={ReadComponent} />
+      <Route exact path={`${routes.Text}/:textTitle/:tocID`} component={ReadContainer} />
       <Route exact path={routes.Tags} component={TextsComponent} />
     </Switch>
   )
