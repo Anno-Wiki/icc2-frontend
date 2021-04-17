@@ -19,7 +19,9 @@ const ReadContainer = () => {
     visible: [], // which annotations are visible
     selStore: '',
   });
-  const [highlightedSelection, setHighlightedSelection] = useState('');
+  const [, setHighlightedSelection] = useState('');
+  const [textRects, setTextRects] = useState({});
+  const [childNodes, setChildNodes] = useState([]);
   const { textTitle, tocID } = useParams();
   const isAuthenticated = true;
   const baseRef = useRef(null);
@@ -63,18 +65,25 @@ const ReadContainer = () => {
 
     fetchData();
   }, []);
-  // used to get resizing of text rects
-  useEffect(() => {}, [useWindowSize().width]);
+
+  useEffect(() => {
+    setTextRects(baseRef.current.getClientRects());
+  }, [useWindowSize().width]);
 
   return (
     <>
-      <TextComponent ref={baseRef} text={state.text.text} />
+      <TextComponent
+        ref={baseRef}
+        setChildNodes={setChildNodes}
+        text={state.text.text}
+      />
       <Annotator toc={state.toc} tocID={tocID} />
       <AnnotationController
-        baseRef={baseRef}
         visible={state.visible}
         setState={setState}
         adata={state.adata}
+        childNodes={childNodes}
+        rects={textRects}
       />
     </>
   );
