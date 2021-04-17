@@ -23,7 +23,7 @@ const AnnotationMarker = props => {
       Y={props.Y}
       onClick={() => props.handleClick(props.number, true)}
     >
-      [{props.number}]
+      [{props.text}]
     </StyledAnnotationMarker>
   );
 };
@@ -35,29 +35,45 @@ const AnnotationController = ({
   childNodes,
   rects,
 }) => {
+
+  const textNodesUnder = (node) => {
+    var all = [];
+    for (node=node.firstChild;node;node=node.nextSibling){
+      if (node.nodeType === 3) all.push(node);
+      else all = all.concat(textNodesUnder(node));
+    }
+    return all;
+  }
+
   const findNodePos = n => {
     let seen = 0;
     let current = 0;
     const nodes = childNodes;
     for (let i = 0; i < nodes.length; i++) {
-      current += nodes[i].textContent.length;
-      if (current >= n) {
-        return [nodes[i].firstChild, n - seen];
+      const textNodes = textNodesUnder(nodes[i]);
+      current += 1 // for returns and such
+      for (let j = 0; j < textNodes.length; j++) {
+        current += textNodes[j].length;
+        if (current >= n) {
+          return [textNodes[j], n - seen];
+        }
+        seen += nodes[i].length;
       }
-      seen += nodes[i].textContent.length;
+      seen += 1 // for returns and such
     }
   };
 
   const findLocation = (open, close) => {
     const range = new Range();
-    var a = findNodePos(open);
-    var b = findNodePos(close);
+    const a = findNodePos(open);
+    const b = findNodePos(close);
+    console.log(open, close, a, b)
     try {
       range.setStart(...a);
       range.setEnd(...b);
-      const span = document.createElement('span');
-      span.style.color = 'red';
-      range.surroundContents(span);
+      const el = document.createElement('span');
+      el.style.backgroundColor = 'yellow';
+      range.surroundContents(el);
       const rects = range.getClientRects();
       const pos = rects[rects.length - 1].top;
       return pos;
@@ -75,29 +91,30 @@ const AnnotationController = ({
   return (
     <>
       {childNodes.length > 0 &&
-        adata &&
-        adata.annotations.map((a, i) => (
-          <AnnotationMarker
-            key={i}
-            X={rects[0].right}
-            Y={findLocation(a.open, a.close)}
-            number={i + 1}
-            handleClick={clickAnnotation}
-          />
-        ))}
+          adata &&
+          adata.annotations.map((a, i) => (
+            <AnnotationMarker
+              key={i}
+              X={rects[0].right}
+              Y={findLocation(a.open, a.close)}
+              number={i + 1}
+              text={a.text}
+              handleClick={clickAnnotation}
+            />
+          ))}
       {childNodes.length > 0 &&
-        adata &&
-        adata.annotations.map((a, i) => (
-          <Annotation
-            key={i}
-            X={rects[0].right - rects[0].left}
-            Y={findLocation(a.open, a.close)}
-            number={i + 1}
-            handleClick={clickAnnotation}
-            text={a.text}
-            visible={visible[i]}
-          />
-        ))}
+          adata &&
+          adata.annotations.map((a, i) => (
+            <Annotation
+              key={i}
+              X={rects[0].right - rects[0].left}
+              Y={findLocation(a.open, a.close)}
+              number={i + 1}
+              handleClick={clickAnnotation}
+              text={a.text}
+              visible={visible[i]}
+            />
+          ))}
     </>
   );
 };
