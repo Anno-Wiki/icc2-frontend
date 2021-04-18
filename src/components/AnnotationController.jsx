@@ -23,7 +23,7 @@ const AnnotationMarker = props => {
       Y={props.Y}
       onClick={() => props.handleClick(props.number, true)}
     >
-      [{props.text}]
+      [{props.number}]
     </StyledAnnotationMarker>
   );
 };
@@ -63,14 +63,15 @@ const AnnotationController = ({
     let current = 0;
     const base = document.getElementById('read');
     const nodes = textNodesUnder(base);
-    let lastParent = base.firstChild;
+    let lastParent = null;
     for (let i = 0; i < nodes.length; i++) {
       current += nodes[i].length;
       const parent = nodes[i].parentNode;
       if (parent !== lastParent && !skippers.includes(parent.tagName)) {
-        console.log(parent);
         lastParent = parent;
-        current += 1 // add a return for every regular element
+        // add 2 returns for every regular element because double newlines
+        // are a marker for a new paragraph, or a header, etc. in Markdown
+        current += 2
       }
       if (current >= n) {
         return [nodes[i], n - seen];
@@ -83,17 +84,13 @@ const AnnotationController = ({
     const range = new Range();
     const a = findNodePos(open);
     const b = findNodePos(close);
-    console.log(open, close, a, b);
     try {
       range.setStart(...a);
       range.setEnd(...b);
-      console.log("Start successful")
-      console.log("Close successful")
       const rects = range.getClientRects();
       const pos = rects[rects.length - 1].top;
-      return pos;
+      return pos + window.scrollY;
     } catch(err) {
-      console.log(open, close, err, range);
       return 100;
     }
   };

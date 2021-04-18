@@ -22,6 +22,8 @@ function getOffsetFromBase(element) {
       // macs and a single from windows. If we just focus on windows \r\n, we
       // can normalize windows to treat new lines as a single character.
       preCaretStr = sel.toString().replace(/\r\n/g, '\n');
+      console.log(preCaretStr);
+      console.log((preCaretStr.match(/\n/g) || []).length);
       start = preCaretStr.length;
 
       // replace original range
@@ -33,8 +35,6 @@ function getOffsetFromBase(element) {
       return {};
     }
   }
-  console.log('start', start);
-  console.log('end', end);
   return {
     start: start,
     end: end,
