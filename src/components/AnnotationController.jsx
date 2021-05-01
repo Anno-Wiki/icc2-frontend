@@ -8,7 +8,7 @@ const Annotation = props => {
       Y={props.Y}
       style={{ display: props.visible ? 'block' : 'none' }}
     >
-      <button onClick={() => props.handleClick(props.number, false)}>
+      <button onClick={() => props.handleClick(props.number-1, false)}>
         &times;
       </button>
       <div dangerouslySetInnerHTML={{ __html: props.text }} />
@@ -21,7 +21,7 @@ const AnnotationMarker = props => {
     <StyledAnnotationMarker
       X={props.X}
       Y={props.Y}
-      onClick={() => props.handleClick(props.number, true)}
+      onClick={() => props.handleClick(props.number-1, true)}
     >
       [{props.number}]
     </StyledAnnotationMarker>
