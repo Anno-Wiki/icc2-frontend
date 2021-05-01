@@ -51,6 +51,7 @@ const ReadContainer = () => {
             .catch(err => console.log(err))
         )
         .catch(err => console.log(err));
+      // detects when text is selected by user every 100ms
       setInterval(
         () => setHighlightedSelection(p => getSel(p)),
         100

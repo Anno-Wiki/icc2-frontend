@@ -31,6 +31,7 @@ const Annotation = props => {
         style={{ margin: '2rem 1rem' }}
         dangerouslySetInnerHTML={{ __html: props.text }}
       />
+      {props.author}
     </StyledAnnotation>
   );
 };
@@ -172,6 +173,7 @@ const AnnotationController = ({
             handleClick={clickAnnotation}
             text={a.text}
             visible={visible[i]}
+            author={a.author}
           />
         ))}
     </>
