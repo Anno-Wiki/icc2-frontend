@@ -12,16 +12,12 @@ const ReadContainer = () => {
     toc: {},
     text: {},
     adata: null, // annotation data
-    amarkers: null,
     editorState: false, // to turn the editor visible or invisible
-    selectionState: {},
-    postions: [],
     visible: [], // which annotations are visible
-    selStore: '',
   });
-  const [, setHighlightedSelection] = useState('');
-  const [textRects, setTextRects] = useState({});
-  const [childNodes, setChildNodes] = useState([]);
+  const [ , setHighlightedSelection ] = useState('');
+  const [ textRects, setTextRects ] = useState({});
+  const [ childNodes, setChildNodes ] = useState([]);
   const { textTitle, tocID } = useParams();
   const isAuthenticated = true;
   const baseRef = useRef(null);
