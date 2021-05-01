@@ -1,37 +1,38 @@
-import React, {useContext, useState, createContext} from 'react'
+import React, { useContext, useState, createContext } from 'react';
 
-const AppStateContext = createContext()
+const AppStateContext = createContext();
 
-const AppStateProvider = ({children}) => {
-  const [theme, setTheme] = useState('light')
+const AppStateProvider = ({ children }) => {
+  const [theme, setTheme] = useState('light');
 
   const toggleTheme = () => {
-    if(theme === 'light'){
-      setTheme('dark')
+    if (theme === 'light') {
+      setTheme('dark');
     } else {
-      setTheme('light')
+      setTheme('light');
     }
-  }
+  };
 
   const valueObj = {
-    theme, toggleTheme
-  }
+    theme,
+    toggleTheme,
+  };
 
   return (
-    <AppStateContext.Provider value={valueObj} >
+    <AppStateContext.Provider value={valueObj}>
       {children}
     </AppStateContext.Provider>
-  )
-}
+  );
+};
 
 export const useAppState = () => {
-  const state = useContext(AppStateContext)
+  const state = useContext(AppStateContext);
 
   if (!state) {
-    throw new Error('useAppState must be used within AppStateProvider')
+    throw new Error('useAppState must be used within AppStateProvider');
   }
 
-  return [state]
-}
+  return [state];
+};
 
-export default AppStateProvider
+export default AppStateProvider;

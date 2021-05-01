@@ -15,7 +15,7 @@ export const Profile = () => {
         {userMetadata ? (
           <pre>{JSON.stringify(userMetadata, null, 2)}</pre>
         ) : (
-          "No user metadata defined"
+          'No user metadata defined'
         )}
       </div>
     )

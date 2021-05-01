@@ -15,9 +15,9 @@ const ReadContainer = () => {
     editorState: false, // to turn the editor visible or invisible
     visible: [], // which annotations are visible
   });
-  const [ , setHighlightedSelection ] = useState('');
-  const [ textRects, setTextRects ] = useState({});
-  const [ childNodes, setChildNodes ] = useState([]);
+  const [, setHighlightedSelection] = useState('');
+  const [textRects, setTextRects] = useState({});
+  const [childNodes, setChildNodes] = useState([]);
   const { textTitle, tocID } = useParams();
   const isAuthenticated = true;
   const baseRef = useRef(null);

@@ -1,6 +1,7 @@
 function getOffsetFromBase(element) {
   // Adapted from Tim Down https://stackoverflow.com/a/4812022/9691276
-  let start = 0, end = 0;
+  let start = 0,
+    end = 0;
   let doc = element.ownerDocument || element.document;
   let win = doc.defaultView || doc.parentWindow;
   let sel, str, preCaretStr;
