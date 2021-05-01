@@ -8,5 +8,5 @@
   "useTabs": false,
   "printWidth": 80,
   "jsxBracketSameLine": false,
-  "endOfLine": "crlf"
+  "endOfLine": "lf"
 }
