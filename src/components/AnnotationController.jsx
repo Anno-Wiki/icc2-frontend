@@ -10,7 +10,7 @@ const StyledAnnotation = styled.div`
   width: ${props => props.width}px;
   top: calc(${props => props.Y}px + 1.2rem);
   left: ${props => props.X}px;
-  z-index: 10;
+  z-index: 2;
 `;
 
 const Annotation = props => {
@@ -152,7 +152,7 @@ export default AnnotationController;
 const StyledAnnotationMarker = styled.button`
   width: fit-content;
   position: absolute;
-  z-index: 8;
+  z-index: 1;
   top: ${props => props.Y}px;
   left: ${props => props.X}px;
 `;
