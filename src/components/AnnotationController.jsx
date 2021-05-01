@@ -1,5 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from '../global/styledcomponents'
+
+const StyledAnnotation = styled.div`
+  background-color: ${({ theme }) => theme.color.white};
+  border-color: ${({ theme }) => theme.color.black};
+  border: solid 1px black;
+  position: absolute;
+  width: ${props => props.width}px;
+  top: calc(${props => props.Y}px + 1.2rem);
+  left: ${props => props.X}px;
+  z-index: 10;
+`;
 
 const Annotation = props => {
   console.log(props.width);
@@ -10,10 +22,10 @@ const Annotation = props => {
       width={props.width}
       style={{ display: props.visible ? 'block' : 'none' }}
     >
-      <button onClick={() => props.handleClick(props.number-1, false)}>
+      <Button style={{ float: "right", maxWidth: "1rem", margin: "0.1rem" }} onClick={() => props.handleClick(props.number-1, false)}>
         &times;
-      </button>
-      <div dangerouslySetInnerHTML={{ __html: props.text }} />
+      </Button>
+      <div style={{ margin: "2rem 1rem" }} dangerouslySetInnerHTML={{ __html: props.text }} />
     </StyledAnnotation>
   );
 };
@@ -140,19 +152,8 @@ export default AnnotationController;
 const StyledAnnotationMarker = styled.button`
   width: fit-content;
   position: absolute;
-  z-index: 10;
+  z-index: 8;
   top: ${props => props.Y}px;
   left: ${props => props.X}px;
 `;
 
-const StyledAnnotation = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  border-color: ${({ theme }) => theme.color.black};
-  border: solid 1px black;
-  position: absolute;
-  padding: 1rem;
-  width: ${props => props.width}px;
-  top: calc(${props => props.Y}px + 1.2rem);
-  left: ${props => props.X}px;
-  z-index: 10;
-`;
