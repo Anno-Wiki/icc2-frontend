@@ -35,7 +35,7 @@ const Annotation = props => {
         console.log(e);
       }
     })();
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, props.author]);
 
   return (
     <StyledAnnotation
