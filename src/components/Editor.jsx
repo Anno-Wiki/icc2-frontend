@@ -75,9 +75,7 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const submit = async (h) => {
-    console.log("Submitted");
     try {
-      console.log("Trying");
       const accessToken = await getAccessTokenSilently({
         audience: audience,
         scope: "post:annotation",
@@ -95,7 +93,6 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       )
         .then(resp => {
-          console.log(resp);
         }, error => {
           console.log(error);
         });
@@ -111,7 +108,6 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
 
   const click = () => {
     // updateState is passed as a prop to hide the component
-    console.log("Clicked");
     updateState(false);
     if (isAuthenticated) {
       const h = value.toString('html');

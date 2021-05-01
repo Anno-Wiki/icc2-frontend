@@ -14,7 +14,6 @@ const StyledAnnotation = styled.div`
 `;
 
 const Annotation = props => {
-  console.log(props.width);
   return (
     <StyledAnnotation
       X={props.X}
