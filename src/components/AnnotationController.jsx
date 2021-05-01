@@ -120,12 +120,12 @@ const AnnotationController = ({
     }
   };
 
-  const unwrap = (el) => {
+  const unwrap = el => {
     // unwraps the element span
     const parent = el.parentNode;
     while (el.firstChild) parent.insertBefore(el.firstChild, el);
     parent.removeChild(el);
-  }
+  };
 
   const clickAnnotation = (i, state, open = null, close = null) => {
     if (currentSelection === null || !state) {
