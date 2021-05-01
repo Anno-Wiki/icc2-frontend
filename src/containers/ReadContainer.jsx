@@ -60,7 +60,7 @@ const ReadContainer = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isAuthenticated, textTitle, tocID]);
 
   useEffect(() => {
     setTextRects(baseRef.current.getClientRects());

@@ -6,7 +6,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import baseRoutes from '../../constants/routes';
 import LoginButton from '../Login';
 import LogoutButton from '../Logout';
-import { breakpoints } from '../../global/breakpoints';
 
 const Nav = styled.nav`
 display: flex;
