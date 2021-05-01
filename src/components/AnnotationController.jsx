@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../global/styledcomponents';
 
@@ -40,7 +40,9 @@ const AnnotationMarker = props => {
     <StyledAnnotationMarker
       X={props.X}
       Y={props.Y}
-      onClick={() => props.handleClick(props.number - 1, true)}
+      onClick={() =>
+        props.handleClick(props.number - 1, true, props.open, props.close)
+      }
     >
       [{props.number}]
     </StyledAnnotationMarker>
@@ -54,6 +56,7 @@ const AnnotationController = ({
   childNodes,
   rects,
 }) => {
+  const [currentSelection, setCurrentSelection] = useState(null);
   const textNodesUnder = node => {
     var all = [];
     for (node = node.firstChild; node; node = node.nextSibling) {
@@ -101,10 +104,44 @@ const AnnotationController = ({
     }
   };
 
-  const clickAnnotation = (i, state) => {
-    let arr = visible.slice();
-    arr[i] = state;
-    setState(prevState => ({ ...prevState, visible: arr }));
+  const highlightSelection = (open, close) => {
+    const range = new Range();
+    const a = findNodePos(open);
+    const b = findNodePos(close);
+    try {
+      range.setStart(...a);
+      range.setEnd(...b);
+      const span = document.createElement('span');
+      span.style.backgroundColor = 'yellow';
+      range.surroundContents(span);
+      setCurrentSelection(span);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const unwrap = (el) => {
+    // unwraps the element span
+    const parent = el.parentNode;
+    while (el.firstChild) parent.insertBefore(el.firstChild, el);
+    parent.removeChild(el);
+  }
+
+  const clickAnnotation = (i, state, open = null, close = null) => {
+    if (currentSelection === null || !state) {
+      // set visibility
+      let arr = visible.slice();
+      arr[i] = state;
+      setState(prevState => ({ ...prevState, visible: arr }));
+    }
+    if (currentSelection === null && state) {
+      // annotation is being opened, highlight and turn it on
+      highlightSelection(open, close);
+    } else if (!state) {
+      // annotation is being closed, turn it off and remove span
+      unwrap(currentSelection);
+      setCurrentSelection(null);
+    }
   };
 
   return (
@@ -119,6 +156,8 @@ const AnnotationController = ({
             number={i + 1}
             text={a.text}
             handleClick={clickAnnotation}
+            open={a.open}
+            close={a.close}
           />
         ))}
       {childNodes.length > 0 &&
