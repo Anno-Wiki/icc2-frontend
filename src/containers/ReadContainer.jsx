@@ -12,7 +12,6 @@ const ReadContainer = () => {
     toc: {},
     text: {},
     adata: null, // annotation data
-    editorState: false, // to turn the editor visible or invisible
     visible: [], // which annotations are visible
   });
   const [, setHighlightedSelection] = useState('');
