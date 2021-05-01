@@ -1,4 +1,4 @@
-const getSel = (strComparison, isAuthenticated) => {
+const getSel = (strComparison) => {
   const sel = window.getSelection();
   const str = sel.toString();
   if (str !== strComparison && sel.rangeCount > 0) {
@@ -10,8 +10,7 @@ const getSel = (strComparison, isAuthenticated) => {
       base !== null &&
       box !== null &&
       sel.toString() !== '' &&
-      base.contains(r.startContainer) &&
-      isAuthenticated
+      base.contains(r.startContainer)
     ) {
       // get the client rectangles and calculate the offset left and top
       const rects = r.getClientRects()[0];

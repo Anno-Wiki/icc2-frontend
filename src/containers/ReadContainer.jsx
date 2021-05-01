@@ -18,7 +18,6 @@ const ReadContainer = () => {
   const [textRects, setTextRects] = useState({});
   const [childNodes, setChildNodes] = useState([]);
   const { textTitle, tocID } = useParams();
-  const isAuthenticated = true;
   const baseRef = useRef(null);
 
   // API calls
@@ -53,13 +52,13 @@ const ReadContainer = () => {
         )
         .catch(err => console.log(err));
       setInterval(
-        () => setHighlightedSelection(p => getSel(p, isAuthenticated)),
+        () => setHighlightedSelection(p => getSel(p)),
         100
       );
     };
 
     fetchData();
-  }, [isAuthenticated, textTitle, tocID]);
+  }, [textTitle, tocID]);
 
   useEffect(() => {
     setTextRects(baseRef.current.getClientRects());
