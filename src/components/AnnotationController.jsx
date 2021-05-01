@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Annotation = props => {
+  console.log(props.width);
   return (
     <StyledAnnotation
       X={props.X}
       Y={props.Y}
+      width={props.width}
       style={{ display: props.visible ? 'block' : 'none' }}
     >
       <button onClick={() => props.handleClick(props.number-1, false)}>
@@ -120,7 +122,8 @@ const AnnotationController = ({
           adata.annotations.map((a, i) => (
             <Annotation
               key={i}
-              X={rects[0].right - rects[0].left}
+              X={rects[0].left}
+              width={rects[0].right-rects[0].left}
               Y={findLocation(a.open, a.close)}
               number={i + 1}
               handleClick={clickAnnotation}
@@ -147,9 +150,9 @@ const StyledAnnotation = styled.div`
   border-color: ${({ theme }) => theme.color.black};
   border: solid 1px black;
   position: absolute;
-  width: 500px;
   padding: 1rem;
-  top: ${props => props.Y}px;
+  width: ${props => props.width}px;
+  top: calc(${props => props.Y}px + 1.2rem);
   left: ${props => props.X}px;
   z-index: 10;
 `;
