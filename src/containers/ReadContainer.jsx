@@ -24,7 +24,7 @@ const ReadContainer = () => {
   useEffect(() => {
     const getAnnotations = async id => {
       await axios
-        .get(`/annotations/toc/${id}-${tocID}`)
+        .get(`/_api/annotations/toc/${id}-${tocID}`)
         .then(res =>
           setState(prevState => ({
             ...prevState,
@@ -36,7 +36,7 @@ const ReadContainer = () => {
     };
     const fetchData = async () => {
       await axios
-        .get(`/text/${textTitle}`)
+        .get(`/_api/text/${textTitle}`)
         .then(res => {
           setState(prevState => ({ ...prevState, toc: res.data }));
           getAnnotations(res.data.bookid);
@@ -44,7 +44,7 @@ const ReadContainer = () => {
         })
         .then(id =>
           axios
-            .get(`/toc/${id}-${tocID}/formatted`)
+            .get(`/_api/toc/${id}-${tocID}/formatted`)
             .then(res =>
               setState(prevState => ({ ...prevState, text: res.data }))
             )

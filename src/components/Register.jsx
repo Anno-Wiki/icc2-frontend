@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-
 import axios from '../utilities/axiosInstance';
 
 const Form = styled.form`
@@ -23,38 +23,47 @@ const Button = styled.button`
 `
 
 const RegisterComponent = () => {
+  let history = useHistory();
   const [usr, setUsr] = useState('');
   const [pwd, setPwd] = useState('');
   const [pwd2, setPwd2] = useState('');
 
-  const register = (username, password) => {
-    axios.post('/_auth/register', {username: username, password: password})
+  const register = async (username, password) => {
+    await axios.post('/_auth/register', {username: username, password: password})
       .then((resp) => {
-        if (resp.json['success'] == true) {
-          // @TODO Login
-          // @TODO Store token
-          // @TODO redirect
-        }
+        if (resp.data['success'])
+          return axios.post('/_auth/login', {username: password, password: password});
+        else throw new Error("Registration failed.");
+      })
+      .then((resp) => {
+        console.log(resp);
+        sessionStorage.setItem('token', JSON.stringify(resp.data['access_token']));
+        history.push('/')
       })
       .catch(err => console.log(err));
-  }
+  };
 
   const handleSubmit = (e) => {
     if (e)
       e.preventDefault();
     for (let field of [usr, pwd, pwd2])
-      if (field === '')
+      if (field === '') {
         alert("All fields are required.");
+        return;
+      }
 
-    if (pwd !== pwd2)
+    if (pwd !== pwd2) {
       alert("Passwords do not match");
+      return;
+    }
     register(usr, pwd);
-  }
+  };
 
   const handleChange = (e) => {
     const mapper = {Username: setUsr, Password: setPwd, Password2: setPwd2};
     mapper[e.target.name](e.target.value);
-  }
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Field

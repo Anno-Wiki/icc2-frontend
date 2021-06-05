@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 export const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
-  const [userMetadata, setUserMetadata] = useState(null);
 
   return (
     isAuthenticated && (
@@ -12,11 +11,6 @@ export const Profile = () => {
         <h2>{user.name}</h2>
         <p>{user.email}</p>
         <h3>User Metadata</h3>
-        {userMetadata ? (
-          <pre>{JSON.stringify(userMetadata, null, 2)}</pre>
-        ) : (
-          'No user metadata defined'
-        )}
       </div>
     )
   );

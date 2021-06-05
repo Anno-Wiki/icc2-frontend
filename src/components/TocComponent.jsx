@@ -8,7 +8,7 @@ export const TocComponent = () => {
 
   useEffect(() => {
     axios
-      .get(`/toc/${textTitle}/all`)
+      .get(`/_api/toc/${textTitle}/all`)
       .then(res => setTocs(res.data.results))
       .catch(err => console.log(err));
   }, [textTitle]);

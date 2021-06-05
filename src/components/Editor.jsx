@@ -81,7 +81,7 @@ const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
         scope: 'post:annotation',
       });
 
-      const url = '/annotate/toc/' + toc;
+      const url = '/_api/annotate/toc/' + toc;
 
       axios
         .post(

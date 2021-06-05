@@ -18,7 +18,7 @@ export const TextsComponent = () => {
   const [texts, setTexts] = useState([]);
 
   useEffect(() => {
-    axios.get('/text/all').then(
+    axios.get('/_api/text/all').then(
       resp => {
         setTexts(resp.data.results);
       },
