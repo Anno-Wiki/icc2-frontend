@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from '../global/styledcomponents';
 
 const StyledAnnotation = styled.div`
@@ -15,28 +14,6 @@ const StyledAnnotation = styled.div`
 `;
 
 const Annotation = props => {
-  const { getAccessTokenSilently } = useAuth0();
-  const [author, setAuthor] = useState('');
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = await getAccessTokenSilently({
-          audience: 'https://annowiki.us.auth0.com/api/v2/',
-          scope: 'read:users',
-        });
-        const response = await fetch(`https://annowiki.us.auth0.com/api/v2/users/${props.author.split('|')[0]}`,{
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setAuthor(await response.json());
-        console.log(response.json());
-      } catch(e) {
-        console.log(e);
-      }
-    })();
-  }, [getAccessTokenSilently, props.author]);
-
   return (
     <StyledAnnotation
       X={props.X}
@@ -54,7 +31,7 @@ const Annotation = props => {
         style={{ margin: '2rem 1rem' }}
         dangerouslySetInnerHTML={{ __html: props.text }}
       />
-      {author}
+      {props.author}
     </StyledAnnotation>
   );
 };

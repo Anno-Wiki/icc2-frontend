@@ -17,7 +17,7 @@ var isAuthenticated = getToken() != null;
 
 export default (function() {
   let ax = axios.create({baseURL: baseURL});
-  ax.defaults.headers.common['Authorization'] = getToken();
+  ax.defaults.headers.common['Authorization'] = `Bearer ${getToken()}`;
   return ax;
 })();
 

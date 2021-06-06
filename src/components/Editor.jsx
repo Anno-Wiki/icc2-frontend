@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import RichTextEditor from 'react-rte';
 import styled from 'styled-components';
-import { useAuth0 } from '@auth0/auth0-react';
-import axios from '../utilities/axiosInstance';
+import axios, { isAuthenticated } from '../utilities/axiosInstance';
 
 const EditorBoxClassName = 'public-DraftEditor-content';
 const EditorClassName = 'editor-box';
@@ -68,41 +67,21 @@ const Submit = styled.button`
     color: white;
   }
 `;
-const audience = process.env.REACT_APP_AUTH0AUDIENCE;
 
 const StatefulEditor = ({ updateState, editorState, selection, toc }) => {
   const [value, setValue] = useState(RichTextEditor.createEmptyValue());
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-
   const submit = async h => {
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: audience,
-        scope: 'post:annotation',
-      });
-
-      const url = '/_api/annotate/toc/' + toc;
-
-      axios
-        .post(
-          url,
-          {
-            start: selection.start,
-            end: selection.end,
-            text: h,
-            author: user.sub,
-          },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        )
-        .then(
-          resp => {},
-          error => {
-            console.log(error);
-          }
-        );
-    } catch (e) {
-      console.log(e.message);
-    }
+    const url = '/_api/annotate/toc/' + toc;
+    axios
+      .post(url,
+        {
+          start: selection.start,
+          end: selection.end,
+          text: h,
+        },
+      )
+      .then(resp => { console.log(resp); })
+      .catch(err => console.log(err));
   };
 
   const handleChange = val => {

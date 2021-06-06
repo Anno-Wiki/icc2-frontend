@@ -1,17 +1,18 @@
 import { default as Editor } from './Editor';
 import React, { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useHistory } from 'react-router-dom';
+import { isAuthenticated } from '../utilities/axiosInstance';
 import getOffsetFromBase from '../utilities/getOffsetFromBase';
 import AnnotateBox from './AnnotateBox';
 
 const Annotator = ({ toc, tocID }) => {
+  let history = useHistory();
   const [displayEditor, setDisplayEditor] = useState(false);
   const [selectedText, setSelectedText] = useState({});
   // changes the editor's state, passed to the editor
   const changeEditor = state => {
     setDisplayEditor(state);
   };
-  const { isAuthenticated } = useAuth0();
 
   const clickAnnotateButton = e => {
     if(isAuthenticated) {
@@ -19,7 +20,11 @@ const Annotator = ({ toc, tocID }) => {
       const sel = getOffsetFromBase(document.getElementById('read'));
       setDisplayEditor(true);
       setSelectedText(sel);
-    } else window.flash("Please log in to annotate.", "error")
+    } else {
+      window.flash("Please log in to annotate.", "error");
+      console.log(history);
+      history.goBack();
+    }
   };
   return (
     <>
