@@ -5,7 +5,8 @@ import routes from '../constants/routes';
 import { TextsComponent } from './TextsComponent';
 import { TocComponent } from './TocComponent';
 import { Profile } from './UserProfile.jsx';
-import RegisterComponent from './Register';
+import Register from './Register';
+import Login from './Login';
 import ReadContainer from '../containers/ReadContainer';
 
 const Routes = () => {
@@ -15,7 +16,8 @@ const Routes = () => {
       <Route exact path={routes.Users} component={Profile} />
       <Route exact path={routes.Writers} component={TextsComponent} />
       <Route exact path={routes.Text} component={TextsComponent} />
-      <Route exact path={'/register'} component={RegisterComponent} />
+      <Route exact path={'/register'} component={Register} />
+      <Route exact path={'/login'} component={Login} />
       <Route
         exact
         path={`${routes.Text}/:textTitle`}

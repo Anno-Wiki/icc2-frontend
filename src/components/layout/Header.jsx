@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { isAuthenticated, delToken } from '../../utilities/axiosInstance';
 
 import baseRoutes from '../../constants/routes';
 
@@ -25,7 +26,16 @@ const Link = styled(NavLink)`
 const SmallLink = styled(Link)`
   font-size: 1rem;
   font-weight: normal;
-`
+`;
+const Button = styled.button`
+  text-decoration: none;
+  font-family: ${({ theme }) => theme.font.nav};
+  font-size: 1rem;
+  font-weight: normal;
+  color: ${({ theme }) => theme.color.black};
+  transition: color ${({ theme }) => theme.transition.short} linear;
+  &:hover { color: ${({ theme }) => theme.color.gray}; }
+`;
 
 
 const Header = () => {
@@ -38,7 +48,9 @@ const Header = () => {
           {linkInfo[0]}
         </Link>
       ))}
-      <SmallLink to={'Register'}>register</SmallLink>
+      { !isAuthenticated && <SmallLink to={'Register'}>register</SmallLink>}
+      { !isAuthenticated && <SmallLink to={'Login'}>login</SmallLink>}
+      { isAuthenticated && <Button onClick={() => delToken()}>Logout</Button> }
     </Nav>
   );
 };
